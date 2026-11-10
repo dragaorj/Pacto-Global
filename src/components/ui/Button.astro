@@ -136,65 +136,49 @@ const iconSize = size === 'lg' ? 18 : size === 'sm' ? 14 : 16;
   .btn--light:hover {
     --_bg: var(--navy-100);
   }
-  /* ---------- CTA principal ---------- */
+  /* ---------- CTA principal (limpo: verde sólido + seta em círculo sutil) ---------- */
   .btn--cta {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    gap: 14px;
-    padding-inline: 24px 6px;
+    gap: 12px;
+    padding-inline: 22px 7px;
     --_fg: var(--white);
-    background: linear-gradient(135deg, #34a58f 0%, var(--teal-600) 48%, #1d5c50 100%);
+    background: var(--teal-600);
     box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.28),
-      0 0 0 1px rgb(255 255 255 / 0.06),
-      0 12px 32px -10px rgb(41 125 109 / 0.75);
+      inset 0 1px 0 rgb(255 255 255 / 0.16),
+      0 8px 22px -12px rgb(41 125 109 / 0.9);
   }
   .btn--cta.btn--lg {
-    padding-inline: 24px 6px;
-  }
-  /* reflexo de luz que atravessa o botão no hover */
-  .btn--cta::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.32) 50%, transparent 70%);
-    transform: translateX(-120%);
-    transition: transform 700ms var(--ease-out);
+    padding-inline: 22px 7px;
   }
   .btn--cta:hover {
-    transform: var(--lift-sm);
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.32),
-      0 0 0 4px rgb(41 125 109 / 0.18),
-      0 16px 40px -10px rgb(41 125 109 / 0.85);
-  }
-  .btn--cta:hover::before {
-    transform: translateX(120%);
+    background: var(--teal-700);
+    transform: none;
   }
   .btn__chip {
     display: grid;
     place-items: center;
     flex-shrink: 0;
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
-    background: var(--white);
-    color: var(--teal-700);
+    background: rgb(255 255 255 / 0.16);
+    color: var(--white);
+    transition:
+      background-color var(--duration-base) var(--ease-out),
+      color var(--duration-base) var(--ease-out);
+  }
+  .btn__chip :global(.icon) {
     transition: transform var(--duration-base) var(--ease-out);
   }
   .btn--md .btn__chip {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
   }
   .btn--cta:hover .btn__chip {
-    transform: rotate(-45deg);
+    background: var(--white);
+    color: var(--teal-700);
   }
-  @media (prefers-reduced-motion: reduce) {
-    .btn--cta::before {
-      display: none;
-    }
+  .btn--cta:hover .btn__chip :global(.icon) {
+    transform: translateX(2px);
   }
 
   /* segue o tema: navy no claro, branco no escuro */

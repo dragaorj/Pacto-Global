@@ -111,6 +111,7 @@ const langs = Object.entries(languages) as [Lang, string][];
     </div>
 
     <div class="hdr__mobile">
+      <Button href="/como-aderir" variant="cta" size="lg" iconRight="arrow-right" class="m-cta">{t('cta.join')}</Button>
       <IconButton icon="search" label={t('search.open')} size="lg" variant="glass" data-open="search" class="m-btn" />
       <IconButton icon="menu" label={t('nav.menu')} size="lg" variant="glass" data-open="menu" class="m-btn" aria-controls="menu-mobile" />
     </div>
@@ -399,7 +400,37 @@ const langs = Object.entries(languages) as [Lang, string][];
   /* mobile */
   .hdr__mobile {
     display: flex;
+    align-items: center;
     gap: 8px;
+  }
+  /* CTA sempre visível no header (tablet e celular): mesma altura de 48px */
+  .hdr__mobile :global(.m-cta) {
+    min-width: 0;
+    padding-inline: 18px 7px;
+    font-size: 12px;
+  }
+  /* celular: a busca fica dentro do menu; logo um pouco menor para o CTA caber inteiro */
+  @media (max-width: 559px) {
+    .hdr__mobile :global(.m-btn[data-open='search']) {
+      display: none;
+    }
+  }
+  @media (max-width: 479px) {
+    .hdr__inner {
+      gap: 12px;
+    }
+    .logo--color {
+      height: 36px;
+    }
+    .logo--white {
+      height: 46px;
+    }
+    .hdr__mobile :global(.m-cta) {
+      padding-inline: 18px;
+    }
+    .hdr__mobile :global(.m-cta .btn__chip) {
+      display: none;
+    }
   }
   .hdr:not([data-over='true']) .m-btn,
   .hdr.is-scrolled .m-btn {
