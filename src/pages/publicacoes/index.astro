@@ -1,0 +1,183 @@
+---
+import Base from '../../layouts/Base.astro';
+import SectionLabel from '../../components/ui/SectionLabel.astro';
+import PublicationCard, { type Tema } from '../../components/cards/PublicationCard.astro';
+import { getPublicacoes, temaLabel } from '../../lib/publicacoes';
+
+const pubs = await getPublicacoes();
+const temas = [...new Set(pubs.map((p) => p.tema))];
+---
+
+<Base title="Publicações" description="Guias, infográficos e pesquisas do Pacto Global da ONU – Rede Brasil para apoiar a implementação de estratégias de sustentabilidade." path="/publicacoes">
+  <section class="pubs container" aria-labelledby="pubs-titulo">
+    <nav class="crumbs" aria-label="Você está em">
+      <a href="/">Início</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">Publicações</span>
+    </nav>
+
+    <header class="pubs__head">
+      <SectionLabel>Publicações e pesquisas</SectionLabel>
+      <h1 id="pubs-titulo">Conhecimento para <span>transformar a prática.</span></h1>
+      <p>Guias, infográficos e pesquisas exclusivas para orientar e apoiar a sua empresa na implementação prática de estratégias de sustentabilidade.</p>
+    </header>
+
+    <div class="pubs__bar">
+      <div class="chips" role="group" aria-label="Filtrar por tema" data-filter>
+        <button type="button" class="chip" data-tema="" aria-pressed="true">Todos <span>{pubs.length}</span></button>
+        {
+          temas.map((t) => (
+            <button type="button" class="chip" data-tema={t} aria-pressed="false">
+              {temaLabel[t] ?? t} <span>{pubs.filter((p) => p.tema === t).length}</span>
+            </button>
+          ))
+        }
+      </div>
+      <p class="pubs__count" aria-live="polite" data-count>{pubs.length} publicações</p>
+    </div>
+
+    <ul role="list" class="pubs__grid" data-list>
+      {
+        pubs.map((p) => (
+          <li data-tema={p.tema}>
+            <PublicationCard title={p.titulo.toUpperCase()} theme={p.tema as Tema} language={p.idioma} href={p.href} image={p.capa} linkLabel="Ler publicação" />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<script>
+  const root = document.querySelector('[data-filter]');
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-list] > li'));
+  const count = document.querySelector('[data-count]');
+  root?.addEventListener('click', (e) => {
+    const btn = (e.target as Element).closest<HTMLButtonElement>('[data-tema]');
+    if (!btn) return;
+    const tema = btn.dataset.tema;
+    root.querySelectorAll('[data-tema]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    let n = 0;
+    items.forEach((li) => {
+      const show = !tema || li.dataset.tema === tema;
+      li.hidden = !show;
+      if (show) n++;
+    });
+    if (count) count.textContent = `${n} ${n === 1 ? 'publicação' : 'publicações'}`;
+  });
+</script>
+
+<style>
+  .pubs {
+    padding-top: calc(var(--header-h) + 40px);
+    padding-bottom: var(--section-y);
+  }
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: var(--space-10);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .crumbs a {
+    text-decoration: none;
+  }
+  .crumbs a:hover {
+    color: var(--color-text);
+    text-decoration: underline;
+  }
+  .pubs__head {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+    max-width: 900px;
+  }
+  h1 {
+    font-size: clamp(2.25rem, 1.2rem + 3vw, 4rem);
+    font-weight: var(--weight-semibold);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+  }
+  h1 span {
+    display: block;
+    color: var(--color-text-strong-muted);
+  }
+  .pubs__head p {
+    max-width: 640px;
+    font-size: var(--text-lead);
+    font-weight: var(--weight-light);
+    color: var(--color-text-muted);
+  }
+  .pubs__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-block: var(--space-12) var(--space-8);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding-inline: 16px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border-strong);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+    transition: background-color var(--duration-base), color var(--duration-base);
+  }
+  .chip span {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  .chip:hover {
+    background: var(--color-bg-muted);
+  }
+  .chip[aria-pressed='true'] {
+    background: var(--color-text);
+    border-color: var(--color-text);
+    color: var(--color-bg);
+  }
+  .chip[aria-pressed='true'] span {
+    color: inherit;
+    opacity: 0.7;
+  }
+  .pubs__count {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .pubs__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 0;
+  }
+  .pubs__grid > li {
+    display: grid;
+  }
+  .pubs__grid > li[hidden] {
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .pubs__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .pubs__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

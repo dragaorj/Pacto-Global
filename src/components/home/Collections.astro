@@ -45,7 +45,7 @@ const featured = kind === 'noticias' ? (items.find((i) => i.featured) ?? items[0
 const rest = kind === 'noticias' ? items.filter((i) => i !== featured).slice(0, 2) : items;
 ---
 
-<SectionShell id={head.id} label={head.label} t1={head.t1} t2={head.t2} bg={head.bg} tone={head.tone} actionLabel={head.cta} actionHref="#">
+<SectionShell id={head.id} label={head.label} t1={head.t1} t2={head.t2} bg={head.bg} tone={head.tone} actionLabel={head.cta} actionHref={kind === "publicacoes" ? "/publicacoes" : "#"}>
   {
     kind === 'eventos' && (
       <ul role="list" class="row row--4 row--scroll" data-stagger>

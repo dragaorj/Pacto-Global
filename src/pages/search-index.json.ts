@@ -15,7 +15,8 @@ export const GET: APIRoute = async () => {
   const items = [
     ...noticias.map((n) => ({ type: 'noticia', title: n.entry.titulo, text: n.entry.resumo, url: `/noticias/${n.slug}`, date: n.entry.data })),
     ...eventos.map((e) => ({ type: 'evento', title: e.entry.titulo, text: `${e.entry.tema ?? ''} · ${e.entry.local} · ${e.entry.data}`, url: e.entry.link || '/#eventos', date: e.entry.data })),
-    ...publicacoes.map((p) => ({ type: 'publicacao', title: p.entry.titulo, text: `${p.entry.tema} · ${p.entry.idioma}`, url: p.entry.arquivo || '/#publicacoes' })),
+    ...publicacoes.map((p) => ({ type: 'publicacao', title: p.entry.titulo, text: p.entry.resumo, url: `/publicacoes/${p.slug}`, date: p.entry.data })),
+    { type: 'pagina', title: 'Publicações', text: 'Todas as publicações: guias, infográficos e pesquisas.', url: '/publicacoes' },
     ...plataformas.map((p) => ({ type: 'plataforma', title: p.entry.titulo, text: p.entry.descricao, url: '/#plataformas' })),
     ...movimentos.map((m) => ({ type: 'movimento', title: `Movimento ${m.entry.nome}`, text: '', url: m.entry.link || '/#movimentos' })),
     { type: 'pagina', title: 'Quem somos · Dez Princípios', text: 'Direitos Humanos, Trabalho, Meio Ambiente, Anticorrupção. Maior iniciativa de sustentabilidade corporativa do mundo.', url: '/#quem-somos' },

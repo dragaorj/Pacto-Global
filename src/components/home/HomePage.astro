@@ -7,6 +7,7 @@ import Collections from './Collections.astro';
 import JoinPartners from './JoinPartners.astro';
 import { cms } from '../../lib/cms';
 import { asset } from '../../lib/images';
+import { getPublicacoes } from '../../lib/publicacoes';
 import { type Lang, useT } from '../../i18n/ui';
 
 interface Props {
@@ -25,7 +26,7 @@ const [home, noticias, eventos, publicacoes, plataformas, movimentos, parceiros]
   cms.singletons.home.read(),
   cms.collections.noticias.all(),
   cms.collections.eventos.all(),
-  cms.collections.publicacoes.all(),
+  getPublicacoes(),
   cms.collections.plataformas.all(),
   cms.collections.movimentos.all(),
   cms.collections.parceiros.all(),
@@ -92,7 +93,7 @@ const localLabel: Record<string, Record<Lang, string>> = {
   <Collections
     lang={lang}
     kind="publicacoes"
-    items={publicacoes.slice(0, 4).map((p) => ({ title: p.entry.titulo.toUpperCase(), href: p.entry.arquivo || '#', image: asset(p.entry.capa), theme: p.entry.tema, language: p.entry.idioma }))}
+    items={publicacoes.slice(0, 4).map((p) => ({ title: p.titulo.toUpperCase(), href: p.href, image: p.capa, theme: p.tema, language: p.idioma }))}
   />
   <JoinPartners lang={lang} partners={parceiros.map((p) => ({ name: p.entry.nome, logo: asset(p.entry.logo), href: p.entry.site ?? undefined }))} />
 </Base>
