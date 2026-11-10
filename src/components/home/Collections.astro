@@ -216,6 +216,11 @@ const rest = kind === 'noticias' ? items.filter((i) => i !== featured).slice(0, 
   .news {
     display: grid;
     gap: 16px;
+    align-items: stretch;
+  }
+  /* todos os cards com a mesma altura: base alinhada */
+  .news > * {
+    height: 100%;
   }
   .news > :global(.news-card:nth-child(n + 3)) {
     display: none;

@@ -87,12 +87,12 @@ export function init() {
   gsap.utils.toArray<HTMLElement>('[data-stagger]').forEach((group) => {
     if (!below(group)) return;
     gsap.from(group.children, {
-      y: 56,
+      y: 48,
       autoAlpha: 0,
-      scale: 0.97,
       duration: 1.1,
       ease: EASE,
       stagger: { each: 0.07, from: 'start' },
+      clearProps: 'transform,opacity,visibility', // termina exatamente alinhado
       scrollTrigger: { trigger: group, start: 'top 88%', once: true },
     });
   });

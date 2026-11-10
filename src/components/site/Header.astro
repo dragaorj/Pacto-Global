@@ -107,7 +107,7 @@ const langs = Object.entries(languages) as [Lang, string][];
         </IconButton>
         <IconButton icon="search" label={t('search.open')} data-open="search" />
       </div>
-      <Button href="/como-aderir" size="lg" iconRight="arrow-right" class="hdr__cta">{t('cta.join')}</Button>
+      <Button href="/como-aderir" variant="cta" size="lg" iconRight="arrow-right" class="hdr__cta">{t('cta.join')}</Button>
     </div>
 
     <div class="hdr__mobile">
@@ -179,7 +179,7 @@ const langs = Object.entries(languages) as [Lang, string][];
       <Icon name="accessibility" size={20} strokeWidth={1.6} />
       {t('a11y.open')}
     </button>
-    <Button href="/como-aderir" size="lg" iconRight="arrow-right" class="drawer__cta">{t('cta.join')}</Button>
+    <Button href="/como-aderir" variant="cta" size="lg" iconRight="arrow-right" class="drawer__cta">{t('cta.join')}</Button>
   </div>
 </dialog>
 

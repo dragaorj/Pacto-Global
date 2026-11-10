@@ -10,6 +10,15 @@ interface Props {
 }
 const { lang, partners } = Astro.props;
 const t = useT(lang);
+/**
+ * Tamanho "óptico": cada logo ocupa uma área parecida.
+ * Logos largas ficam mais baixas, logos compactas ficam mais altas (entre 28 e 64px).
+ */
+const logoH = (w?: number, h?: number) => {
+  if (!w || !h) return 44;
+  const ratio = w / h;
+  return Math.round(Math.min(64, Math.max(26, Math.sqrt(7200 / ratio))));
+};
 ---
 
 <section id="aderir" class="join" aria-labelledby="aderir-titulo">
@@ -20,7 +29,7 @@ const t = useT(lang);
         <p>{t('join.d')}</p>
       </div>
       <div class="join__btns">
-        <Button href="/como-aderir" size="lg" iconRight="arrow-right">{t("cta.join")}</Button>
+        <Button href="/como-aderir" variant="cta" size="lg" iconRight="arrow-right">{t("cta.join")}</Button>
         <Button href="/como-aderir#formulario" variant="outline-light" size="lg" iconRight="arrow-right">{t("cta.contact")}</Button>
       </div>
     </div>
@@ -39,17 +48,19 @@ const t = useT(lang);
     <ul role="list" class="partners__list" data-stagger>
       {
         partners.map((p) => (
-          <li>
+          <li style={`--h:${logoH(p.logo?.width, p.logo?.height)}px`}>
             {p.logo && p.logo.format === 'svg' ? (
               <img src={p.logo.src} alt={p.name} width={p.logo.width} height={p.logo.height} loading="lazy" decoding="async" />
             ) : p.logo ? (
-              <Picture src={p.logo} alt={p.name} formats={['avif', 'webp']} widths={[180, 360]} sizes="180px" quality={80} loading="lazy" />
+              <Picture src={p.logo} alt={p.name} formats={['avif', 'webp']} widths={[200, 400]} sizes="200px" quality={82} loading="lazy" />
             ) : (
               <span>{p.name}</span>
             )}
           </li>
         ))
       }
+      {/* completa a última linha (múltiplo de 6 serve para 2, 3 e 6 colunas) */}
+      {Array.from({ length: (6 - (partners.length % 6)) % 6 }).map(() => <li class="filler" aria-hidden="true" />)}
     </ul>
   </div>
 </section>
@@ -145,25 +156,38 @@ const t = useT(lang);
     height: 28px;
     width: auto;
   }
+  /* grade de logos com divisórias finas: tudo alinhado, cada logo no centro da sua célula */
   .partners__list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px 16px;
+    gap: 1px;
     margin: 0;
-    align-items: center;
+    background: var(--color-border);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-3xl);
+    overflow: hidden;
   }
   .partners__list li {
     display: grid;
     place-items: center;
-    height: 48px;
+    height: 80px;
+    padding: 12px;
+    background: var(--color-bg);
+    transition: background-color var(--duration-base);
+  }
+  .partners__list li:hover {
+    background: var(--color-bg-subtle);
+  }
+  .partners__list :global(picture) {
+    display: contents;
   }
   .partners__list :global(img) {
-    max-height: 48px;
-    max-width: 100%;
+    height: calc(var(--h, 44px) * 0.62);
     width: auto;
+    max-width: 100%;
     object-fit: contain;
     filter: grayscale(1);
-    opacity: 0.75;
+    opacity: 0.8;
     transition:
       filter var(--duration-base),
       opacity var(--duration-base);
@@ -175,18 +199,27 @@ const t = useT(lang);
   :global([data-theme='dark']) .partners__list :global(img),
   :global([data-theme='dark']) .partners__sponsor img {
     filter: grayscale(1) brightness(0) invert(1);
-    opacity: 0.7;
+    opacity: 0.75;
+  }
+  @media (min-width: 640px) {
+    .partners__list li {
+      height: 104px;
+      padding: 20px;
+    }
+    .partners__list :global(img) {
+      height: calc(var(--h, 44px) * 0.82);
+    }
   }
   @media (min-width: 1024px) {
     .partners__list {
       grid-template-columns: repeat(6, 1fr);
-      gap: 32px 24px;
     }
     .partners__list li {
-      height: 64px;
+      height: 128px;
+      padding: 24px;
     }
     .partners__list :global(img) {
-      max-height: 56px;
+      height: var(--h, 44px);
     }
   }
 </style>

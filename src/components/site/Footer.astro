@@ -1,6 +1,5 @@
 ---
 import Icon from '../ui/Icon.astro';
-import Button from '../ui/Button.astro';
 import IconButton from '../ui/IconButton.astro';
 import { type Lang, useT } from '../../i18n/ui';
 import { cms } from '../../lib/cms';
@@ -61,8 +60,16 @@ const socials = [
       }
       <div class="ft__col ft__service">
         <p class="ft__title">{t('footer.service')}</p>
-        <Button href="#" variant="light" size="md" iconLeft="megaphone">{t('footer.press')}</Button>
-        <Button href="#" variant="light" size="md" iconLeft="clipboard">{t('footer.report')}</Button>
+        <a class="svc" href="#">
+          <span class="svc__icon" aria-hidden="true"><Icon name="megaphone" size={20} strokeWidth={1.5} /></span>
+          <span class="svc__txt"><strong>{t('footer.press')}</strong><small>{t('footer.pressDesc')}</small></span>
+          <Icon name="arrow-up-right" size={18} strokeWidth={1.5} class="svc__arrow" />
+        </a>
+        <a class="svc" href="#">
+          <span class="svc__icon" aria-hidden="true"><Icon name="clipboard" size={20} strokeWidth={1.5} /></span>
+          <span class="svc__txt"><strong>{t('footer.report')}</strong><small>{t('footer.reportDesc')}</small></span>
+          <Icon name="arrow-up-right" size={18} strokeWidth={1.5} class="svc__arrow" />
+        </a>
       </div>
     </div>
     <div class="ft__bottom">
@@ -143,9 +150,58 @@ const socials = [
     gap: 12px;
     align-content: start;
   }
-  .ft__service :global(.btn) {
-    width: 100%;
-    justify-content: flex-start;
+  .svc {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 76px;
+    padding: 14px 16px;
+    border-radius: var(--radius-xl);
+    background: rgb(255 255 255 / 0.05);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    color: var(--white);
+    text-decoration: none;
+    transition:
+      background-color var(--duration-base),
+      border-color var(--duration-base);
+  }
+  .svc:hover {
+    background: rgb(255 255 255 / 0.09);
+    border-color: rgb(255 255 255 / 0.2);
+  }
+  .svc__icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgb(204 177 70 / 0.14);
+    color: var(--gold-500);
+  }
+  .svc__txt {
+    display: grid;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+  }
+  .svc__txt strong {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+  }
+  .svc__txt small {
+    font-size: var(--text-xs);
+    color: rgb(255 255 255 / 0.6);
+  }
+  .svc :global(.svc__arrow) {
+    color: rgb(255 255 255 / 0.5);
+    transition:
+      transform var(--duration-base) var(--ease-out),
+      color var(--duration-base);
+  }
+  .svc:hover :global(.svc__arrow) {
+    color: var(--white);
+    transform: translate(2px, -2px);
   }
   .ft__bottom {
     display: flex;
