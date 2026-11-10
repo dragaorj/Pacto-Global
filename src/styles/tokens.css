@@ -179,7 +179,8 @@
   --gutter: clamp(20px, 4vw, 32px);
 
   /* ---------- Layout ---------- */
-  --container: max(1200px, min(1600px, 84vw)); /* 1200 a 1440px de tela, cresce até 1600 em telas largas */
+  /* 1200px até telas de 1440px; acima disso cresce 75% do espaço extra, até 1800px (ultrawide) */
+  --container: max(1200px, min(1800px, calc(1200px + (100vw - 1440px) * 0.75)));
   --container-wide: 1400px;
   --container-narrow: 760px;
   --measure: 42rem; /* largura máx. de parágrafos */

@@ -126,13 +126,14 @@ const iconSize = size === 'lg' ? 18 : size === 'sm' ? 14 : 16;
   .btn--light:hover {
     --_bg: var(--navy-100);
   }
+  /* segue o tema: navy no claro, branco no escuro */
   .btn--outline {
-    --_fg: var(--navy-700);
-    --_bd: var(--navy-700);
+    --_fg: var(--color-text);
+    --_bd: color-mix(in srgb, var(--color-text) 85%, transparent);
   }
   .btn--outline:hover {
-    --_bg: var(--navy-700);
-    --_fg: var(--white);
+    --_bg: var(--color-text);
+    --_fg: var(--color-bg);
   }
   .btn--outline-light {
     --_fg: var(--white);

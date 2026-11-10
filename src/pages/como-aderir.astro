@@ -1,0 +1,1064 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import SectionLabel from '../components/ui/SectionLabel.astro';
+import Button from '../components/ui/Button.astro';
+import Icon from '../components/ui/Icon.astro';
+import { asset } from '../lib/images';
+import { paises, tiposOrganizacao, niveis, simNao } from '../data/adesao';
+
+const heroImg = asset('/src/assets/images/noticias/rede-brasil-nova-york.jpg');
+const enviado = false; // página estática: o retorno sem JavaScript (?enviado=1) é tratado no script abaixo
+
+const pilares = [
+  ['Direitos Humanos', 'var(--tema-direitos-humanos)'],
+  ['Trabalho', 'var(--red-500)'],
+  ['Meio Ambiente', 'var(--teal-600)'],
+  ['Anticorrupção', 'var(--tema-anticorrupcao)'],
+];
+const beneficios = [
+  ['Confiança e reputação', 'Visibilidade como empresa comprometida com a sustentabilidade.'],
+  ['As melhores práticas ESG', 'Troque experiências, oportunidades e desafios. Inspire-se com as melhores práticas corporativas.'],
+  ['Networking qualificado', 'Conecte-se com empresas e instituições que estão moldando a agenda ESG no Brasil e no mundo.'],
+  ['Conhecimento e ferramentas', 'Acesse conteúdos e metodologias que geram impacto estratégico real.'],
+  ['Eventos exclusivos', 'Participe de encontros locais, nacionais e internacionais com especialistas e líderes empresariais.'],
+];
+const etapas = [
+  { t: 'Verifique o alinhamento', d: 'Confira se as práticas da sua empresa estão alinhadas aos Dez Princípios do Pacto Global.', link: { label: 'Conhecer os Dez Princípios', href: '/#quem-somos' } },
+  { t: 'Assine a carta de adesão', d: 'Preencha o modelo, sem alterar o texto, e colete a assinatura da mais alta liderança da empresa no Brasil.', link: { label: 'Baixar modelo da carta (.docx)', href: 'https://homolog.pactoglobal.org.br/wp-content/uploads/2025/10/carta-de-adesao.docx' } },
+  { t: 'Complete o formulário online', d: 'Envie a carta assinada pelo formulário oficial de adesão do Pacto Global da ONU.', link: { label: 'Acessar formulário de adesão', href: 'https://unglobalcompact.org/business-application-form' } },
+];
+const contribuicao = [
+  ['Acima de 30 bilhões', '30.000'],
+  ['Entre 10 e 30 bilhões', '25.000'],
+  ['Entre 5 e 10 bilhões', '20.000'],
+  ['Entre 1 e 5 bilhões', '15.000'],
+  ['Entre 500 milhões e 1 bilhão', '7.500'],
+  ['Entre 250 e 500 milhões', '5.000'],
+  ['Entre 50 e 250 milhões', '2.500'],
+  ['Entre 25 e 50 milhões', '1.250'],
+  ['Menos de 25 milhões', '450'],
+];
+const faq = [
+  ['Qual a contribuição anual?', 'A contribuição anual é calculada com base no faturamento bruto anual da empresa, conforme a tabela de contribuição desta página (valores em dólares).'],
+  ['Todas as empresas podem aderir?', 'Sim. Empresas de todos os portes e setores podem aderir à Rede Brasil do Pacto Global da ONU, desde que possuam mais de 10 colaboradores. A contribuição é definida de forma proporcional ao faturamento bruto anual.'],
+  ['Como deve ser assinada e enviada a carta de compromisso?', 'A carta deve ser assinada, obrigatoriamente, pela mais alta liderança da empresa no Brasil (normalmente o CEO ou Presidente). Não são aceitas assinaturas de outros cargos, mesmo com procuração. O texto da carta não pode ser alterado e deve ser preenchido exatamente conforme o modelo. A assinatura pode ser feita eletronicamente, e a carta deve ser anexada ao formulário de adesão.'],
+  ['Quanto tempo leva para concluir o processo de adesão?', 'Realizamos uma análise de diligência reputacional para garantir que a empresa esteja alinhada aos Dez Princípios do Pacto Global. Esse processo pode levar até 6 semanas. Após a aprovação, a empresa recebe um e-mail com o manual de boas-vindas e o convite para a reunião de onboarding.'],
+  ['Quais são os compromissos ao aderir ao Pacto Global?', 'Assinar a carta de compromisso, apoiar os Dez Princípios universais da ONU, pagar a anuidade e relatar anualmente os avanços por meio da Comunicação de Progresso (CoP).'],
+  ['O que é a Comunicação de Progresso (CoP)?', 'É um reporte anual simples e padronizado que mostra como a empresa está avançando nos temas ESG e nos Dez Princípios do Pacto.'],
+  ['Minha empresa ainda não participa. Posso inscrever colaboradores em programas da Rede?', 'Apenas funcionários(as) de empresas participantes do Pacto Global da ONU são elegíveis para programas e indicações. Se a sua empresa ainda não participa, preencha o cadastro de interesse nesta página.'],
+  ['Caso minha empresa não queira mais participar, como funciona a saída?', 'A participação é voluntária e a empresa pode se desligar a qualquer momento. Basta que um(a) representante autorizado(a) envie um e-mail para engajamento@pactoglobal.org.br, informando a decisão e os motivos do desligamento.'],
+];
+---
+
+<Base title="Como aderir" description="Junte-se à maior iniciativa de sustentabilidade corporativa do mundo. Veja benefícios, etapas, contribuição e faça seu cadastro de interesse." overHero path="/como-aderir">
+  <!-- ============ HERO ============ -->
+  <section class="ja-hero" aria-labelledby="ja-titulo">
+    <div class="ja-hero__media" aria-hidden="true">
+      {heroImg && <Picture src={heroImg} alt="" formats={['avif', 'webp']} widths={[640, 1080, 1600, 1920]} sizes="100vw" quality={62} loading="eager" fetchpriority="high" />}
+    </div>
+    <div class="container ja-hero__inner">
+      <nav class="crumbs" aria-label="Você está em">
+        <a href="/">Início</a><span aria-hidden="true">/</span><span aria-current="page">Como aderir</span>
+      </nav>
+      <SectionLabel tone="dark">Quero aderir</SectionLabel>
+      <h1 id="ja-titulo">Junte-se à maior iniciativa de <span>sustentabilidade corporativa do mundo.</span></h1>
+      <p class="ja-hero__lead">O Pacto Global da ONU – Rede Brasil apoia a sua empresa em cada passo da jornada ESG.</p>
+      <div class="ja-hero__btns">
+        <Button href="#formulario" variant="accent" size="lg" iconRight="arrow-right">Quero aderir</Button>
+        <Button href="#etapas" variant="outline-light" size="lg" iconRight="arrow-right">Como funciona</Button>
+      </div>
+      <dl class="ja-hero__stats">
+        <div><dt>organizações no Brasil</dt><dd>2.000+</dd></div>
+        <div><dt>iniciativas e projetos</dt><dd>60+</dd></div>
+        <div><dt>empresas no mundo</dt><dd>22.485</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ POR QUE ============ -->
+  <section class="ja-sec" aria-labelledby="porque-titulo">
+    <div class="container why">
+      <div class="why__text" data-reveal>
+        <SectionLabel>Por que aderir</SectionLabel>
+        <h2 id="porque-titulo" class="ja-title">Por que sua empresa deve <span>aderir ao Pacto Global?</span></h2>
+      </div>
+      <div class="why__body" data-reveal>
+        <p>O Pacto Global conecta sua empresa a uma rede com <strong>mais de 2.000 organizações no Brasil</strong> que estão transformando seus negócios por meio da sustentabilidade.</p>
+        <p>Não importa o tamanho, o setor ou o estágio da jornada ESG da sua empresa: temos <strong>mais de 60 iniciativas e projetos</strong> para impulsionar seus resultados. Alinhe sua estratégia aos Objetivos de Desenvolvimento Sustentável (ODS) e aos nossos quatro pilares de atuação:</p>
+        <ul role="list" class="pillars">
+          {pilares.map(([p, c]) => <li><span style={`background:${c}`} aria-hidden="true" />{p}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BENEFÍCIOS ============ -->
+  <section class="ja-sec ja-sec--subtle" id="beneficios" aria-labelledby="ben-titulo">
+    <div class="container">
+      <header class="ja-head" data-reveal>
+        <SectionLabel>Benefícios</SectionLabel>
+        <h2 id="ben-titulo" class="ja-title">Ao aderir, sua empresa <span>terá acesso a:</span></h2>
+      </header>
+      <ol role="list" class="benefits" data-stagger>
+        {
+          beneficios.map(([t, d], i) => (
+            <li>
+              <span class="benefits__n">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{t}</h3>
+              <p>{d}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ ETAPAS ============ -->
+  <section class="ja-sec" id="etapas" aria-labelledby="etapas-titulo">
+    <div class="container">
+      <header class="ja-head" data-reveal>
+        <SectionLabel>Etapas de adesão</SectionLabel>
+        <h2 id="etapas-titulo" class="ja-title">Como funciona a <span>adesão e participação.</span></h2>
+      </header>
+      <ol role="list" class="steps" data-stagger>
+        {
+          etapas.map((e, i) => (
+            <li>
+              <span class="steps__n" aria-hidden="true">{i + 1}</span>
+              <h3>{e.t}</h3>
+              <p>{e.d}</p>
+              <a href={e.link.href} target={e.link.href.startsWith('http') ? '_blank' : undefined} rel={e.link.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
+                {e.link.label}
+                <Icon name={e.link.href.startsWith('http') ? 'arrow-up-right' : 'arrow-right'} size={16} strokeWidth={1.75} />
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ FORMULÁRIO ============ -->
+  <section class="ja-sec ja-sec--dark" id="formulario" aria-labelledby="form-titulo">
+    <div class="container form-wrap">
+      <div class="form-intro" data-reveal>
+        <SectionLabel tone="dark">Cadastro de interesse</SectionLabel>
+        <h2 id="form-titulo" class="ja-title ja-title--light">Vamos conversar sobre <span>a adesão da sua empresa.</span></h2>
+        <p>Se a sua empresa ainda não é participante do Pacto Global, preencha o cadastro. Nossa equipe de engajamento entra em contato para tirar dúvidas e orientar os próximos passos.</p>
+        <ul role="list" class="form-intro__list">
+          <li><Icon name="clock" size={18} /> Retorno da equipe de engajamento</li>
+          <li><Icon name="clipboard" size={18} /> Análise reputacional de até 6 semanas</li>
+          <li><Icon name="megaphone" size={18} /> Dúvidas: <a href="mailto:engajamento@pactoglobal.org.br">engajamento@pactoglobal.org.br</a></li>
+        </ul>
+      </div>
+
+      <div class="form-card">
+        <div class="form-ok" data-form-ok hidden={!enviado} tabindex="-1">
+          <span class="form-ok__icon" aria-hidden="true"><Icon name="arrow-right" size={22} /></span>
+          <h3>Cadastro enviado!</h3>
+          <p>Obrigado pelo interesse. Nossa equipe de engajamento vai entrar em contato em breve.</p>
+        </div>
+
+        <form action="/api/adesao" method="post" class="form" data-form hidden={enviado} novalidate>
+          <p class="form__req">Todos os campos são obrigatórios.</p>
+          <div class="hp" aria-hidden="true">
+            <label>Não preencha este campo<input type="text" name="website_url" tabindex="-1" autocomplete="off" /></label>
+          </div>
+          <input type="hidden" name="utm_source" id="utm_source" />
+          <input type="hidden" name="utm_medium" id="utm_medium" />
+          <input type="hidden" name="utm_campaign" id="utm_campaign" />
+          <input type="hidden" name="utm_content" id="utm_content" />
+
+          <div class="grid2">
+            <div class="field"><label for="f-nome">Nome</label><input id="f-nome" name="nome" required autocomplete="given-name" /></div>
+            <div class="field"><label for="f-sobrenome">Sobrenome</label><input id="f-sobrenome" name="sobrenome" required autocomplete="family-name" /></div>
+            <div class="field"><label for="f-email">E-mail corporativo</label><input id="f-email" name="email" type="email" required autocomplete="email" inputmode="email" /></div>
+            <div class="field"><label for="f-tel">Telefone / WhatsApp (com DDD)</label><input id="f-tel" name="telefone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="11999999999" /></div>
+            <div class="field"><label for="f-empresa">Empresa</label><input id="f-empresa" name="empresa" required autocomplete="organization" /></div>
+            <div class="field"><label for="f-cargo">Cargo</label><input id="f-cargo" name="cargo" required autocomplete="organization-title" /></div>
+            <div class="field">
+              <label for="f-pais">País</label>
+              <select id="f-pais" name="pais" required autocomplete="country-name">
+                <option value="">Selecione</option>
+                {paises.map(([v, l]) => <option value={v} selected={v === 'Brazil'}>{l}</option>)}
+              </select>
+            </div>
+            <div class="field"><label for="f-func">Número de funcionários</label><input id="f-func" name="numerofuncionarios" type="number" min="1" step="1" required inputmode="numeric" /></div>
+            <div class="field">
+              <label for="f-tipo">Tipo de organização</label>
+              <select id="f-tipo" name="tipoorganizacao" required>
+                <option value="">Selecione</option>
+                {tiposOrganizacao.map(([v, l]) => <option value={v}>{l}</option>)}
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-nivel">Nível hierárquico</label>
+              <select id="f-nivel" name="nivelhierarquico" required>
+                <option value="">Selecione</option>
+                {niveis.map(([v, l]) => <option value={v}>{l}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <fieldset class="radio">
+            <legend>Sua empresa já faz parte do Pacto Global da ONU – Rede Brasil?</legend>
+            <div class="radio__opts">{simNao.map(([v, l]) => <label><input type="radio" name="fazparte" value={v} required /> <span>{l}</span></label>)}</div>
+          </fieldset>
+          <fieldset class="radio">
+            <legend>Deseja receber notícias, atualizações e insights do Pacto Global da ONU?</legend>
+            <div class="radio__opts">{simNao.map(([v, l]) => <label><input type="radio" name="optin" value={v} required /> <span>{l}</span></label>)}</div>
+          </fieldset>
+
+          <p class="form__error" data-form-error role="alert" hidden></p>
+          <button type="submit" class="btn-submit" data-submit>
+            <span data-label>Enviar cadastro</span>
+            <Icon name="arrow-right" size={18} strokeWidth={2} />
+          </button>
+          <p class="form__legal">Ao enviar, você concorda com o uso dos seus dados conforme a <a href="https://pactoglobal.org.br/pg/politica-de-privacidade" target="_blank" rel="noopener noreferrer">Política de Privacidade</a> do Pacto Global da ONU – Rede Brasil.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTRIBUIÇÃO ============ -->
+  <section class="ja-sec" id="contribuicao" aria-labelledby="contrib-titulo">
+    <div class="container contrib">
+      <header class="ja-head" data-reveal>
+        <SectionLabel>Contribuição anual</SectionLabel>
+        <h2 id="contrib-titulo" class="ja-title">Proporcional ao <span>faturamento da empresa.</span></h2>
+        <p class="ja-desc">A anuidade de participantes é definida pelo faturamento bruto anual. Valores em dólares americanos (USD).</p>
+      </header>
+      <div class="table-wrap" data-reveal>
+        <table>
+          <caption class="visually-hidden">Contribuição anual de participantes por faturamento bruto (USD)</caption>
+          <thead><tr><th scope="col">Faturamento bruto anual (USD)</th><th scope="col">Anuidade (USD)</th></tr></thead>
+          <tbody>
+            {contribuicao.map(([f, v]) => <tr><th scope="row">{f}</th><td>US$ {v}</td></tr>)}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="ja-sec ja-sec--subtle" id="faq" aria-labelledby="faq-titulo">
+    <div class="container faq">
+      <header class="ja-head" data-reveal>
+        <SectionLabel>Perguntas frequentes</SectionLabel>
+        <h2 id="faq-titulo" class="ja-title">Quer entender melhor? <span>Tire suas dúvidas.</span></h2>
+      </header>
+      <div class="faq__list" data-stagger>
+        {
+          faq.map(([q, a], i) => (
+            <details name="faq" open={i === 0}>
+              <summary>
+                <span>{q}</span>
+                <span class="faq__icon" aria-hidden="true" />
+              </summary>
+              <p>{a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA FINAL ============ -->
+  <section class="ja-sec ja-final">
+    <div class="container">
+      <div class="ja-final__card" data-reveal>
+        <div>
+          <h2 class="ja-title ja-title--light">Ainda com dúvidas? <span>Fale com a nossa equipe.</span></h2>
+          <p>Agende uma conversa com o time de engajamento da Rede Brasil.</p>
+        </div>
+        <div class="ja-final__btns">
+          <Button href="#formulario" size="lg" iconRight="arrow-right">Agendar conversa</Button>
+          <Button href="mailto:engajamento@pactoglobal.org.br" variant="outline-light" size="lg" iconRight="arrow-up-right">Enviar e-mail</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // UTMs: guarda e preenche (mesmo comportamento do site atual)
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach((p) => {
+    const v = new URLSearchParams(location.search).get(p);
+    try {
+      if (v) localStorage.setItem(p, v);
+      const f = document.getElementById(p) as HTMLInputElement | null;
+      if (f) f.value = localStorage.getItem(p) || '';
+    } catch {}
+  });
+
+  const form = document.querySelector<HTMLFormElement>('[data-form]');
+  const ok = document.querySelector<HTMLElement>('[data-form-ok]');
+  const errBox = document.querySelector<HTMLElement>('[data-form-error]');
+  const label = form?.querySelector<HTMLElement>('[data-label]');
+  const submit = form?.querySelector<HTMLButtonElement>('[data-submit]');
+
+  if (new URLSearchParams(location.search).get('enviado') === '1' && form && ok) {
+    form.hidden = true;
+    ok.hidden = false;
+  }
+
+  const clearErrors = () => form?.querySelectorAll('.field.is-invalid, .radio.is-invalid').forEach((f) => f.classList.remove('is-invalid'));
+  const markInvalid = (name: string, msg: string) => {
+    const el = form?.querySelector<HTMLElement>(`[name="${name}"]`);
+    const box = el?.closest('.field, .radio');
+    if (!box) return;
+    box.classList.add('is-invalid');
+    let m = box.querySelector('.field__msg');
+    if (!m) {
+      m = document.createElement('small');
+      m.className = 'field__msg';
+      box.appendChild(m);
+    }
+    m.textContent = msg;
+  };
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearErrors();
+    if (errBox) errBox.hidden = true;
+    // validação no navegador
+    let first: HTMLElement | null = null;
+    form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input[required], select[required]').forEach((el) => {
+      if (!el.checkValidity()) {
+        markInvalid(el.name, el.type === 'email' ? 'Informe um e-mail válido.' : 'Campo obrigatório.');
+        first ??= el;
+      }
+    });
+    if (first) {
+      (first as HTMLElement).focus();
+      return;
+    }
+    submit!.disabled = true;
+    label!.textContent = 'Enviando…';
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+      const data = await res.json();
+      if (data.ok) {
+        form.hidden = true;
+        ok!.hidden = false;
+        ok!.focus();
+      } else {
+        if (data.errors) Object.entries(data.errors).forEach(([k, v]) => markInvalid(k, String(v)));
+        throw new Error(data.error || 'Revise os campos destacados.');
+      }
+    } catch (err) {
+      if (errBox) {
+        errBox.textContent = (err as Error).message || 'Não foi possível enviar. Tente novamente.';
+        errBox.hidden = false;
+      }
+    } finally {
+      submit!.disabled = false;
+      label!.textContent = 'Enviar cadastro';
+    }
+  });
+</script>
+
+<style>
+  /* ---------- hero ---------- */
+  .ja-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    color: var(--white);
+    background: var(--navy-950);
+  }
+  .ja-hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .ja-hero__media :global(picture),
+  .ja-hero__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ja-hero__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgb(17 34 63 / 0.97) 0%, rgb(17 34 63 / 0.88) 45%, rgb(17 34 63 / 0.45) 100%),
+      linear-gradient(180deg, rgb(10 15 30 / 0.5) 0%, rgb(10 15 30 / 0) 25%);
+  }
+  .ja-hero__inner {
+    display: grid;
+    gap: var(--space-6);
+    justify-items: start;
+    padding-top: calc(var(--header-h) + 48px);
+    padding-bottom: var(--space-16);
+  }
+  .crumbs {
+    display: flex;
+    gap: 8px;
+    font-size: var(--text-sm);
+    color: var(--navy-200);
+  }
+  .crumbs a {
+    text-decoration: none;
+  }
+  .crumbs a:hover {
+    color: var(--white);
+    text-decoration: underline;
+  }
+  h1 {
+    max-width: 980px;
+    color: var(--white);
+    font-size: clamp(2.25rem, 1rem + 3.6vw, 4.75rem);
+    font-weight: var(--weight-semibold);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+  }
+  h1 span {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .ja-hero__lead {
+    max-width: 600px;
+    font-size: var(--text-lead);
+    font-weight: var(--weight-light);
+    color: var(--navy-200);
+  }
+  .ja-hero__btns {
+    display: grid;
+    gap: 12px;
+    width: 100%;
+    margin-top: var(--space-2);
+  }
+  .ja-hero__btns :global(.btn) {
+    width: 100%;
+  }
+  .ja-hero__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    width: 100%;
+    margin: var(--space-10) 0 0;
+    padding-top: var(--space-6);
+    border-top: 1px solid rgb(255 255 255 / 0.14);
+  }
+  .ja-hero__stats div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 4px;
+  }
+  .ja-hero__stats dd {
+    margin: 0;
+    font-size: clamp(1.5rem, 1rem + 2vw, 3rem);
+    font-weight: var(--weight-light);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .ja-hero__stats dt {
+    font-size: var(--text-xs);
+    color: var(--navy-200);
+  }
+  @media (min-width: 768px) {
+    .ja-hero__inner {
+      min-height: min(88svh, 820px);
+      align-content: end;
+      padding-bottom: var(--space-16);
+    }
+    .ja-hero__btns {
+      display: flex;
+      width: auto;
+      gap: 16px;
+    }
+    .ja-hero__btns :global(.btn) {
+      width: auto;
+    }
+    .ja-hero__stats {
+      max-width: 720px;
+      gap: 40px;
+    }
+    .ja-hero__stats dt {
+      font-size: var(--text-sm);
+    }
+  }
+
+  /* ---------- seções ---------- */
+  .ja-sec {
+    padding-block: var(--section-y);
+  }
+  .ja-sec--subtle {
+    background: var(--color-bg-subtle);
+  }
+  .ja-sec--dark {
+    background: var(--color-bg-dark);
+    background-image: var(--pattern-dots-dark);
+    background-size: var(--pattern-dots-size);
+    color: var(--white);
+  }
+  :global([data-theme='dark']) .ja-sec--dark {
+    background-color: #0a1830;
+  }
+  .ja-head {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+    margin-bottom: var(--space-12);
+  }
+  .ja-title {
+    max-width: 900px;
+    font-size: clamp(2rem, 1.2rem + 2vw, 3.5rem);
+    font-weight: var(--weight-semibold);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+  }
+  .ja-title span {
+    display: block;
+    color: var(--color-text-strong-muted);
+  }
+  .ja-title--light {
+    color: var(--white);
+  }
+  .ja-title--light span {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .ja-desc {
+    max-width: 600px;
+    font-size: var(--text-lead);
+    font-weight: var(--weight-light);
+    color: var(--color-text-muted);
+  }
+
+  /* por que */
+  .why {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .why__text {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+  }
+  .why__body {
+    display: grid;
+    gap: var(--space-5);
+    font-size: var(--text-lead);
+    font-weight: var(--weight-light);
+    line-height: 1.6;
+  }
+  .why__body strong {
+    font-weight: var(--weight-semibold);
+    color: var(--color-text);
+  }
+  .pillars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: var(--space-2) 0 0;
+  }
+  .pillars li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 16px 0 14px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border-strong);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+  }
+  .pillars span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  @media (min-width: 1024px) {
+    .why {
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 6vw, 120px);
+    }
+  }
+
+  /* benefícios */
+  .benefits {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+  }
+  .benefits li {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding: 28px;
+    border-radius: var(--radius-3xl);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+  .benefits__n {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--color-action);
+  }
+  .benefits h3 {
+    font-size: var(--text-h4);
+  }
+  .benefits p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  @media (min-width: 768px) {
+    .benefits {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .benefits {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+
+  /* etapas */
+  .steps {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+    counter-reset: s;
+  }
+  .steps li {
+    position: relative;
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    padding: 32px 28px 28px;
+    border-top: 2px solid var(--color-text);
+  }
+  .steps__n {
+    font-size: clamp(3rem, 2rem + 3vw, 5rem);
+    font-weight: var(--weight-light);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--color-text-strong-muted);
+  }
+  .steps h3 {
+    font-size: var(--text-h4);
+  }
+  .steps p {
+    color: var(--color-text-muted);
+  }
+  .steps a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    margin-top: 4px;
+    font-weight: var(--weight-semibold);
+    color: var(--color-action);
+    text-decoration: none;
+  }
+  .steps a:hover {
+    text-decoration: underline;
+  }
+  @media (min-width: 1024px) {
+    .steps {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .steps li {
+      padding-inline: 0 24px;
+    }
+  }
+
+  /* formulário */
+  .form-wrap {
+    display: grid;
+    gap: var(--space-10);
+  }
+  .form-intro {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+    align-content: start;
+  }
+  .form-intro p {
+    max-width: 520px;
+    font-size: var(--text-lead);
+    font-weight: var(--weight-light);
+    color: var(--navy-200);
+  }
+  .form-intro__list {
+    display: grid;
+    gap: 12px;
+    margin: var(--space-2) 0 0;
+    color: var(--navy-200);
+    font-size: var(--text-sm);
+  }
+  .form-intro__list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .form-intro__list :global(.icon) {
+    color: var(--gold-500);
+  }
+  .form-intro__list a {
+    color: var(--white);
+  }
+  .form-card {
+    padding: clamp(20px, 3vw, 40px);
+    border-radius: var(--radius-3xl);
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: 0 30px 80px rgb(0 0 0 / 0.25);
+  }
+  .form {
+    display: grid;
+    gap: var(--space-6);
+  }
+  .form[hidden],
+  .form-ok[hidden] {
+    display: none;
+  }
+  .form__req {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .grid2 {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 640px) {
+    .grid2 {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .field {
+    display: grid;
+    gap: 6px;
+  }
+  .field label,
+  .radio legend {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+  }
+  .field input,
+  .field select {
+    width: 100%;
+    height: 48px;
+    padding-inline: 14px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: var(--text-body);
+    transition:
+      border-color var(--duration-base),
+      box-shadow var(--duration-base);
+  }
+  .field select {
+    appearance: none;
+    padding-right: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+  }
+  .field input:focus,
+  .field select:focus {
+    outline: none;
+    border-color: var(--color-action);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-action) 18%, transparent);
+  }
+  .is-invalid input,
+  .is-invalid select {
+    border-color: var(--red-600);
+  }
+  :global(.field__msg) {
+    font-size: var(--text-xs);
+    color: var(--red-600);
+  }
+  .radio {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .radio__opts {
+    display: flex;
+    gap: 8px;
+  }
+  .radio label {
+    position: relative;
+    cursor: pointer;
+  }
+  .radio input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+  }
+  .radio label span {
+    display: inline-grid;
+    place-items: center;
+    min-width: 96px;
+    height: 44px;
+    padding-inline: 18px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border-strong);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    transition: background-color var(--duration-base), color var(--duration-base);
+  }
+  .radio input:checked + span {
+    background: var(--color-text);
+    border-color: var(--color-text);
+    color: var(--color-bg);
+  }
+  .radio input:focus-visible + span {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  .form__error {
+    padding: 12px 16px;
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--red-600) 10%, transparent);
+    color: var(--red-600);
+    font-size: var(--text-sm);
+  }
+  .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 52px;
+    border-radius: var(--radius-full);
+    background: var(--color-action);
+    color: var(--white);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    transition: background-color var(--duration-base);
+  }
+  .btn-submit:hover {
+    background: var(--color-action-hover);
+  }
+  .btn-submit:disabled {
+    opacity: 0.6;
+    cursor: progress;
+  }
+  .form__legal {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  .form-ok {
+    display: grid;
+    gap: 12px;
+    justify-items: start;
+    padding: 24px 8px;
+    outline: none;
+  }
+  .form-ok__icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-action) 14%, transparent);
+    color: var(--color-action);
+  }
+  .form-ok h3 {
+    font-size: var(--text-h3);
+  }
+  .form-ok p {
+    color: var(--color-text-muted);
+  }
+  @media (min-width: 1024px) {
+    .form-wrap {
+      grid-template-columns: 5fr 7fr;
+      gap: clamp(40px, 6vw, 120px);
+      align-items: start;
+    }
+    .form-intro {
+      position: sticky;
+      top: calc(var(--header-h) + 24px);
+    }
+  }
+
+  /* contribuição */
+  .contrib {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .contrib .ja-head {
+    margin-bottom: 0;
+  }
+  .table-wrap {
+    border-radius: var(--radius-3xl);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-body);
+  }
+  thead th {
+    padding: 16px 24px;
+    text-align: left;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    background: var(--color-bg-subtle);
+  }
+  tbody th,
+  tbody td {
+    padding: 16px 24px;
+    border-top: 1px solid var(--color-border);
+    text-align: left;
+    font-weight: var(--weight-regular);
+  }
+  tbody td {
+    font-weight: var(--weight-semibold);
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  tbody tr:hover {
+    background: var(--color-bg-subtle);
+  }
+  @media (min-width: 1024px) {
+    .contrib {
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 6vw, 120px);
+      align-items: start;
+    }
+  }
+
+  /* faq */
+  .faq {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .faq .ja-head {
+    margin-bottom: 0;
+  }
+  .faq__list {
+    display: grid;
+    gap: 12px;
+  }
+  details {
+    border-radius: var(--radius-2xl);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    transition: border-color var(--duration-base);
+  }
+  details[open] {
+    border-color: var(--color-border-strong);
+  }
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 24px;
+    font-size: var(--text-h5);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text);
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq__icon {
+    position: relative;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-bg-muted);
+  }
+  .faq__icon::before,
+  .faq__icon::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 12px;
+    height: 1.5px;
+    background: currentColor;
+    translate: -50% -50%;
+    transition: rotate var(--duration-base) var(--ease-out);
+  }
+  .faq__icon::after {
+    rotate: 90deg;
+  }
+  details[open] .faq__icon::after {
+    rotate: 0deg;
+  }
+  details p {
+    padding: 0 24px 24px;
+    max-width: 72ch;
+    color: var(--color-text-body);
+    line-height: 1.7;
+  }
+  @media (min-width: 1024px) {
+    .faq {
+      grid-template-columns: 1fr 2fr;
+      gap: clamp(40px, 6vw, 120px);
+      align-items: start;
+    }
+    .faq .ja-head {
+      position: sticky;
+      top: calc(var(--header-h) + 24px);
+    }
+  }
+
+  /* cta final */
+  .ja-final__card {
+    display: grid;
+    gap: var(--space-8);
+    padding: 40px 24px;
+    border-radius: var(--radius-3xl);
+    background: var(--color-bg-dark);
+    color: var(--white);
+  }
+  .ja-final__card p {
+    margin-top: 12px;
+    color: var(--navy-200);
+    font-size: var(--text-lead);
+    font-weight: var(--weight-light);
+  }
+  .ja-final__btns {
+    display: grid;
+    gap: 12px;
+  }
+  .ja-final__btns :global(.btn) {
+    width: 100%;
+  }
+  @media (min-width: 1024px) {
+    .ja-final__card {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      padding: 72px 88px;
+    }
+    .ja-final__btns :global(.btn) {
+      width: 200px;
+    }
+  }
+</style>

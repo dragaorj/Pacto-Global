@@ -84,7 +84,7 @@ const langs = Object.entries(languages) as [Lang, string][];
       <div class="pill pill--util">
         <div class="dd dd--right" data-dropdown>
           <button class="pill__item lang" type="button" aria-expanded="false" aria-controls="dd-lang" aria-label={`${lang.toUpperCase()} – ${t("lang.label")}`}>
-            <Icon name="globe" size={18} strokeWidth={1.6} />
+            <Icon name="globe" size={17} strokeWidth={1.5} />
             <span>{lang.toUpperCase()}</span>
           </button>
           <ul role="list" class="dd__panel" id="dd-lang">
@@ -102,12 +102,12 @@ const langs = Object.entries(languages) as [Lang, string][];
         <span class="pill__sep" aria-hidden="true"></span>
         <IconButton icon="accessibility" label={t('a11y.open')} data-open="a11y" />
         <IconButton icon="moon" label={t('theme.label')} data-theme-toggle data-label-light={t('theme.toLight')} data-label-dark={t('theme.toDark')}>
-          <span class="ico-moon"><Icon name="moon" size={20} strokeWidth={1.6} /></span>
-          <span class="ico-sun"><Icon name="sun" size={20} strokeWidth={1.6} /></span>
+          <span class="ico-moon"><Icon name="moon" size={18} strokeWidth={1.5} /></span>
+          <span class="ico-sun"><Icon name="sun" size={18} strokeWidth={1.5} /></span>
         </IconButton>
         <IconButton icon="search" label={t('search.open')} data-open="search" />
       </div>
-      <Button href="#aderir" size="lg" iconRight="arrow-right" class="hdr__cta">{t('cta.join')}</Button>
+      <Button href="/como-aderir" size="lg" iconRight="arrow-right" class="hdr__cta">{t('cta.join')}</Button>
     </div>
 
     <div class="hdr__mobile">
@@ -118,7 +118,7 @@ const langs = Object.entries(languages) as [Lang, string][];
 </header>
 
 <!-- Menu mobile (gaveta) -->
-<dialog class="drawer" id="menu-mobile" data-dialog="menu" aria-label={t('nav.menu')}>
+<dialog class="drawer" data-lenis-prevent id="menu-mobile" data-dialog="menu" aria-label={t('nav.menu')}>
   <div class="drawer__top">
     <img src="/images/logos/pacto/pacto-global-colorido.svg" alt="Pacto Global – Rede Brasil" width="114" height="40" />
     <IconButton icon="close" label={t('nav.close')} size="lg" variant="soft" data-close />
@@ -179,7 +179,7 @@ const langs = Object.entries(languages) as [Lang, string][];
       <Icon name="accessibility" size={20} strokeWidth={1.6} />
       {t('a11y.open')}
     </button>
-    <Button href="#aderir" size="lg" iconRight="arrow-right" class="drawer__cta" data-close>{t('cta.join')}</Button>
+    <Button href="/como-aderir" size="lg" iconRight="arrow-right" class="drawer__cta">{t('cta.join')}</Button>
   </div>
 </dialog>
 
@@ -188,11 +188,13 @@ const langs = Object.entries(languages) as [Lang, string][];
     position: fixed;
     inset: 0 0 auto;
     z-index: var(--z-sticky);
-    padding-block: 12px;
+    padding-block: 10px;
     color: var(--color-text);
-    background: color-mix(in srgb, var(--color-bg) 88%, transparent);
-    backdrop-filter: saturate(1.4) blur(18px);
-    border-bottom: 1px solid var(--color-border);
+    /* vidro translúcido (sem branco chapado) */
+    background: color-mix(in srgb, var(--color-bg) 68%, transparent);
+    backdrop-filter: saturate(1.8) blur(22px);
+    -webkit-backdrop-filter: saturate(1.8) blur(22px);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text) 6%, transparent);
     transition:
       background-color var(--duration-slow) var(--ease-out),
       padding var(--duration-slow) var(--ease-out),
@@ -204,8 +206,7 @@ const langs = Object.entries(languages) as [Lang, string][];
       padding-block: 24px;
     }
     .hdr.is-scrolled {
-      padding-block: 12px;
-      box-shadow: 0 8px 24px rgb(16 24 40 / 0.06);
+      padding-block: 10px;
     }
   }
   /* sobre o banner */
@@ -256,11 +257,12 @@ const langs = Object.entries(languages) as [Lang, string][];
     padding: 4px;
     margin: 0;
     border-radius: var(--radius-full);
-    background: var(--color-bg-muted);
+    background: color-mix(in srgb, var(--color-text) 4.5%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text) 5%, transparent);
   }
   .hdr[data-over='true']:not(.is-scrolled) .pill {
-    background: rgb(255 255 255 / 0.12);
-    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.18);
+    background: rgb(255 255 255 / 0.1);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.14);
     backdrop-filter: blur(16px);
   }
   .pill__item {
@@ -273,38 +275,63 @@ const langs = Object.entries(languages) as [Lang, string][];
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
     text-decoration: none;
-    color: inherit;
+    color: var(--color-text-body);
     white-space: nowrap;
-    transition: background-color var(--duration-base) var(--ease-out);
+    transition:
+      background-color var(--duration-base) var(--ease-out),
+      color var(--duration-base) var(--ease-out);
   }
   .pill__item:hover {
-    background: color-mix(in srgb, var(--color-bg) 70%, transparent);
+    color: var(--color-text);
+    background: color-mix(in srgb, var(--color-text) 6%, transparent);
   }
-  .hdr[data-over='true']:not(.is-scrolled) .pill__item:hover {
-    background: rgb(255 255 255 / 0.14);
+  .pill__item :global(.icon) {
+    opacity: 0.6;
   }
+  /* item atual: destaque discreto, sem "chip" branco */
   .pill__item.is-current {
-    background: var(--color-bg);
     color: var(--color-text);
     font-weight: var(--weight-semibold);
-    box-shadow: 0 1px 3px rgb(16 24 40 / 0.1);
+    background: color-mix(in srgb, var(--color-text) 8%, transparent);
+  }
+  .hdr[data-over='true']:not(.is-scrolled) .pill__item {
+    color: rgb(255 255 255 / 0.82);
+  }
+  .hdr[data-over='true']:not(.is-scrolled) .pill__item:hover,
+  .hdr[data-over='true']:not(.is-scrolled) .pill__item.is-current {
+    color: var(--white);
+    background: rgb(255 255 255 / 0.14);
   }
   .pill__sep {
     width: 1px;
-    height: 20px;
+    height: 18px;
     margin-inline: 4px;
     background: currentColor;
-    opacity: 0.2;
+    opacity: 0.14;
+  }
+  .pill--util {
+    color: var(--color-text-body);
+  }
+  .hdr[data-over='true']:not(.is-scrolled) .pill--util {
+    color: rgb(255 255 255 / 0.85);
   }
   .pill--util :global(.ibtn) {
     --_fg: currentColor;
+  }
+  .pill--util :global(.ibtn:hover),
+  .pill--util .lang:hover {
+    color: var(--color-text);
+  }
+  .hdr[data-over='true']:not(.is-scrolled) .pill--util :global(.ibtn:hover),
+  .hdr[data-over='true']:not(.is-scrolled) .pill--util .lang:hover {
+    color: var(--white);
   }
   /* hover: véu da própria cor do ícone — nunca some (branco sobre o banner, navy no header claro) */
   .pill--util :global(.ibtn:hover),
   .pill--util :global(.ibtn:focus-visible),
   .lang:hover {
-    --_bg: color-mix(in srgb, currentColor 16%, transparent);
-    background: color-mix(in srgb, currentColor 16%, transparent);
+    --_bg: color-mix(in srgb, currentColor 10%, transparent);
+    background: color-mix(in srgb, currentColor 10%, transparent);
   }
   .lang {
     padding-inline: 12px 14px;

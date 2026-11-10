@@ -12,7 +12,7 @@ interface Props {
 }
 const { icon, label, size = 'md', variant = 'ghost', href, class: className, ...rest } = Astro.props;
 const Tag = href ? 'a' : 'button';
-const px = { sm: 16, md: 20, lg: 20 }[size];
+const px = { sm: 16, md: 18, lg: 20 }[size];
 ---
 
 <Tag
@@ -23,7 +23,7 @@ const px = { sm: 16, md: 20, lg: 20 }[size];
   class:list={['ibtn', `ibtn--${size}`, `ibtn--${variant}`, className]}
   {...rest}
 >
-  <slot><Icon name={icon} size={px} strokeWidth={1.6} /></slot>
+  <slot><Icon name={icon} size={px} strokeWidth={1.5} /></slot>
 </Tag>
 
 <style>

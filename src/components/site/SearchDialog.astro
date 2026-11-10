@@ -25,7 +25,7 @@ const labels = {
 };
 ---
 
-<dialog class="search" data-dialog="search" aria-label={t('search.open')} data-labels={JSON.stringify(labels)} data-lang={lang}>
+<dialog class="search" data-lenis-prevent data-dialog="search" aria-label={t('search.open')} data-labels={JSON.stringify(labels)} data-lang={lang}>
   <div class="search__box">
     <form class="search__field" role="search" onsubmit="return false">
       <Icon name="search" size={22} strokeWidth={1.6} />

@@ -14,9 +14,9 @@ const cfg = await cms.singletons.configuracoes.read();
 const cols = [
   {
     title: t('footer.institutional'),
-    links: [t('footer.l.about'), t('footer.l.principles'), t('footer.l.sdgs'), t('footer.l.members'), t('footer.l.join'), t('footer.l.cop')],
+    links: [[t('footer.l.about'), '/#quem-somos'], [t('footer.l.principles'), '/#quem-somos'], [t('footer.l.sdgs'), '/#plataformas'], [t('footer.l.members'), '#'], [t('footer.l.join'), '/como-aderir'], [t('footer.l.cop'), '#']],
   },
-  { title: t('footer.policies'), links: [t('footer.l.cookies'), t('footer.l.privacyLp'), t('footer.l.privacyBot'), t('footer.l.jobs')] },
+  { title: t('footer.policies'), links: [[t('footer.l.cookies'), '#'], [t('footer.l.privacyLp'), 'https://pactoglobal.org.br/pg/politica-de-privacidade'], [t('footer.l.privacyBot'), '#'], [t('footer.l.jobs'), '#']] },
 ];
 const socials = [
   ['linkedin', 'LinkedIn', cfg?.linkedin || 'https://www.linkedin.com/company/pactoglobal/'],
@@ -50,9 +50,9 @@ const socials = [
               <Icon name="chevron-down" size={20} strokeWidth={1.6} />
             </summary>
             <ul role="list">
-              {c.links.map((l) => (
+              {c.links.map(([l, href]) => (
                 <li>
-                  <a href="#">{l}</a>
+                  <a href={href}>{l}</a>
                 </li>
               ))}
             </ul>
