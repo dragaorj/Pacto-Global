@@ -54,7 +54,7 @@ hero:
     link: '#eventos'
     video: ''
     imagem: /src/assets/images/eventos/open-house-brasil-2026.jpeg
-    posicao: center
+    posicao: right
     en:
       titulo: 4th Open House Brazil 2026
       destaque: Roots of Integrity

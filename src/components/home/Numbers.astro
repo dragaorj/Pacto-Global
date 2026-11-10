@@ -73,7 +73,7 @@ const plus = [true, false, false, true];
     justify-items: start;
   }
   .num__head h2 {
-    font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem);
+    font-size: clamp(2rem, 1.2rem + 2vw, 3.5rem);
     font-weight: var(--weight-semibold);
     line-height: 1.08;
     letter-spacing: -0.025em;
@@ -99,7 +99,7 @@ const plus = [true, false, false, true];
     display: flex;
     align-items: flex-start;
     gap: 2px;
-    font-size: clamp(2.75rem, 1.6rem + 3.4vw, 4.5rem);
+    font-size: clamp(2.75rem, 1.4rem + 3.6vw, 6rem);
     font-weight: var(--weight-light);
     line-height: 1;
     letter-spacing: -0.04em;
@@ -120,14 +120,14 @@ const plus = [true, false, false, true];
   }
   @media (min-width: 1024px) {
     .num__grid {
-      grid-template-columns: 384px 1fr;
+      grid-template-columns: 1fr 2fr;
       column-gap: 24px;
     }
     .num__photo :global(img) {
       aspect-ratio: 384 / 520;
     }
     .num__content {
-      padding-left: 102px;
+      padding-left: clamp(48px, 7vw, 160px);
       gap: 40px;
     }
     .num__list {

@@ -299,6 +299,13 @@ const langs = Object.entries(languages) as [Lang, string][];
   .pill--util :global(.ibtn) {
     --_fg: currentColor;
   }
+  /* hover: véu da própria cor do ícone — nunca some (branco sobre o banner, navy no header claro) */
+  .pill--util :global(.ibtn:hover),
+  .pill--util :global(.ibtn:focus-visible),
+  .lang:hover {
+    --_bg: color-mix(in srgb, currentColor 16%, transparent);
+    background: color-mix(in srgb, currentColor 16%, transparent);
+  }
   .lang {
     padding-inline: 12px 14px;
     font-weight: var(--weight-semibold);

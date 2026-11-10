@@ -342,3 +342,15 @@ html.a11y-contrast h2 span {
   -webkit-text-fill-color: #ffe600 !important;
   color: #ffe600 !important;
 }
+
+/* Telas grandes / ultrawide: tudo em rem cresce um pouco */
+@media (min-width: 1800px) {
+  html {
+    font-size: 106.25%;
+  }
+}
+@media (min-width: 2300px) {
+  html {
+    font-size: 112.5%;
+  }
+}

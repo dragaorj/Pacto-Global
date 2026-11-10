@@ -129,7 +129,7 @@ const pos: Record<string, string> = { center: '50% 40%', right: '78% 40%', left:
       headlines.map((h) => (
         <li>
           <a class="heads__item" href={h.href}>
-            {h.image && <Picture src={h.image} alt="" formats={['avif', 'webp']} widths={[112]} sizes="56px" quality={60} class="heads__thumb" loading="lazy" />}
+            {h.image && <Picture src={h.image} alt="" formats={['avif', 'webp']} widths={[128, 192]} sizes="64px" quality={65} class="heads__thumb" loading="lazy" />}
             <span>
               <strong>{h.title}</strong>
               <small>{h.meta}</small>
@@ -226,7 +226,7 @@ const pos: Record<string, string> = { center: '50% 40%', right: '78% 40%', left:
     display: grid;
     gap: var(--space-5);
     justify-items: start;
-    max-width: 894px;
+    max-width: min(1000px, 62vw);
     opacity: 0;
     visibility: hidden;
     transform: translateY(12px);
@@ -242,7 +242,7 @@ const pos: Record<string, string> = { center: '50% 40%', right: '78% 40%', left:
   }
   .hero__title {
     color: var(--white);
-    font-size: clamp(2.25rem, 1.2rem + 3.6vw, 3.75rem);
+    font-size: clamp(2.25rem, 1rem + 3.4vw, 4.75rem);
     font-weight: var(--weight-semibold);
     line-height: 1.04;
     letter-spacing: -0.03em;
@@ -396,10 +396,15 @@ const pos: Record<string, string> = { center: '50% 40%', right: '78% 40%', left:
     box-shadow: var(--shadow-md);
     text-decoration: none;
   }
+  .heads__item :global(picture) {
+    flex: 0 0 auto;
+    display: block;
+  }
   .heads__item :global(.heads__thumb),
   .heads__item :global(.heads__thumb img) {
-    width: 56px;
-    height: 56px;
+    width: 64px;
+    min-width: 64px;
+    height: 64px;
     flex-shrink: 0;
     border-radius: 12px;
     object-fit: cover;

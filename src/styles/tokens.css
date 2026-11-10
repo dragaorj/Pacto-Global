@@ -179,7 +179,7 @@
   --gutter: clamp(20px, 4vw, 32px);
 
   /* ---------- Layout ---------- */
-  --container: 1200px;
+  --container: max(1200px, min(1600px, 84vw)); /* 1200 a 1440px de tela, cresce até 1600 em telas largas */
   --container-wide: 1400px;
   --container-narrow: 760px;
   --measure: 42rem; /* largura máx. de parágrafos */
