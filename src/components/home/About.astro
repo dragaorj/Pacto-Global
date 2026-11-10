@@ -1,5 +1,6 @@
 ---
 import SectionLabel from '../ui/SectionLabel.astro';
+import Icon, { type IconName } from '../ui/Icon.astro';
 import { type Lang, useT } from '../../i18n/ui';
 
 interface Props {
@@ -7,7 +8,15 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = useT(lang);
+const pillarStyle: [IconName, string][] = [
+  ['hand-heart', 'var(--tema-direitos-humanos)'],
+  ['briefcase', 'var(--tema-trabalho)'],
+  ['leaf', 'var(--tema-meio-ambiente)'],
+  ['shield', 'var(--tema-anticorrupcao)'],
+];
 const pillars = [1, 2, 3, 4].map((n) => ({
+  icon: pillarStyle[n - 1][0],
+  color: pillarStyle[n - 1][1],
   n: t(`pillar.${n}.n` as any),
   t: t(`pillar.${n}.t` as any),
   d: t(`pillar.${n}.d` as any),
@@ -32,8 +41,13 @@ const themes = [
     <ul role="list" class="about__pillars" data-stagger>
       {
         pillars.map((p) => (
-          <li>
-            <small>{p.n}</small>
+          <li class="pillar" style={`--c:${p.color}`}>
+            <div class="pillar__top">
+              <span class="pillar__icon" aria-hidden="true">
+                <Icon name={p.icon} size={24} strokeWidth={1.6} />
+              </span>
+              <small>{p.n}</small>
+            </div>
             <h3>{p.t}</h3>
             <p>{p.d}</p>
           </li>
@@ -74,29 +88,99 @@ const themes = [
   .about__statement span {
     color: var(--color-text-strong-muted);
   }
+  /* 4 pilares: cards iguais, ícone na cor do tema, faixa de cor que cresce no hover */
   .about__pillars {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-6) 16px;
-    margin: var(--space-12) 0 0;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin: var(--space-10) 0 0;
   }
-  .about__pillars li {
+  .pillar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px;
+    border-radius: var(--radius-2xl);
+    background: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    transition:
+      border-color var(--duration-base) var(--ease-out),
+      background-color var(--duration-base) var(--ease-out),
+      transform var(--duration-base) var(--ease-out);
+  }
+  .pillar::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 4px;
+    background: var(--c);
+    opacity: 0.35;
+    transform: scaleX(0.999);
+    transition: opacity var(--duration-slow) var(--ease-out);
+  }
+  .pillar:hover {
+    border-color: color-mix(in srgb, var(--c) 35%, var(--color-border));
+    background: var(--color-surface);
+    transform: translateY(-2px);
+  }
+  .pillar:hover::after {
+    opacity: 1;
+  }
+  .pillar__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .pillar__icon {
     display: grid;
-    gap: 8px;
-    align-content: start;
-    padding-top: 20px;
-    border-top: 1px solid var(--color-border-strong);
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--c) 12%, transparent);
+    color: var(--c);
   }
-  .about__pillars small {
+  :global([data-theme='dark']) .pillar__icon {
+    background: color-mix(in srgb, var(--c) 22%, transparent);
+    color: color-mix(in srgb, var(--c) 55%, white);
+  }
+  .pillar small {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
+    padding-inline: 12px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border-strong);
     font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
     color: var(--color-text-muted);
+    white-space: nowrap;
   }
-  .about__pillars h3 {
-    font-size: var(--text-h5);
+  .pillar h3 {
+    font-size: var(--text-h4);
+    font-weight: var(--weight-semibold);
+    letter-spacing: -0.01em;
   }
-  .about__pillars p {
+  .pillar p {
     font-size: var(--text-sm);
+    line-height: 1.55;
     color: var(--color-text-muted);
+  }
+  @media (min-width: 640px) {
+    .about__pillars {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pillar,
+    .pillar::after {
+      transition: none;
+    }
   }
   @media (min-width: 1024px) {
     .about__row {
@@ -106,10 +190,10 @@ const themes = [
     .about__pillars {
       grid-template-columns: repeat(4, 1fr);
       gap: 24px;
-      margin-top: 56px;
+      margin-top: 64px;
     }
-    .about__pillars h3 {
-      font-size: var(--text-h4);
+    .pillar {
+      padding: 28px;
     }
   }
 
