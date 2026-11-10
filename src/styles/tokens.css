@@ -1,0 +1,229 @@
+/* =========================================================================
+   Pacto Global – Rede Brasil · Design Tokens
+   Extraídos de pactoglobal.org.br + layout "Pacto Global - Home.pdf".
+   Tipografia: Outfit (Google Fonts), pesos 100–900.
+   Use SEMPRE os tokens semânticos (--color-*, --text-*, --space-*) nos
+   componentes; a paleta base (--navy-*, --gold-*) existe para compor.
+   ========================================================================= */
+
+:root {
+  /* ---------- Paleta base: Navy (cor institucional) ---------- */
+  --navy-950: #0a0f1e; /* fundo do hero */
+  --navy-925: #001b44; /* títulos em fundo claro */
+  --navy-900: #0a2846; /* rodapé */
+  --navy-850: #11223f; /* seção "magnitude" */
+  --navy-800: #162d4d; /* seção "movimentos" */
+  --navy-700: #1e3250; /* cor primária / header */
+  --navy-600: #1a5276; /* detalhes do rodapé, ícones sociais */
+  --navy-500: #4c6b8b; /* gradiente de títulos */
+  --navy-400: #699cc6;
+  --navy-200: #aecfe6; /* texto secundário em fundo escuro */
+  --navy-100: #dceaf4;
+
+  /* ---------- Dourado (destaques em fundo escuro) ---------- */
+  --gold-600: #cca353;
+  --gold-500: #ccb146;
+  --gold-300: #e0c68b;
+
+  /* ---------- Ação ---------- */
+  --teal-600: #297d6d; /* CTA principal */
+  --teal-700: #1f6155;
+  --red-500: #ec3740; /* CTA do hero / categoria "Eventos" */
+  --red-600: #d42a33;
+  --un-blue: #009edb; /* azul ONU */
+
+  /* ---------- Neutros ---------- */
+  --white: #ffffff;
+  --gray-25: #fafafa;
+  --gray-50: #f7fafc;
+  --gray-100: #f3f4f6;
+  --gray-150: #edf2f7;
+  --gray-200: #e5e7eb;
+  --gray-400: #a0aec0;
+  --gray-500: #718096;
+  --gray-600: #667085;
+  --gray-700: #4b5563;
+  --gray-800: #374151;
+  --gray-900: #1a2a40;
+  --black: #000000;
+
+  /* ---------- ODS / SDGs (cores oficiais ONU) ---------- */
+  --ods-1: #e5243b;
+  --ods-2: #dda63a;
+  --ods-3: #4c9f38;
+  --ods-4: #c5192d;
+  --ods-5: #ff3a21;
+  --ods-6: #26bde2;
+  --ods-7: #fcc30b;
+  --ods-8: #a21942;
+  --ods-9: #fd6925;
+  --ods-10: #dd1367;
+  --ods-11: #fd9d24;
+  --ods-12: #bf8b2e;
+  --ods-13: #3f7e44;
+  --ods-14: #0a97d9;
+  --ods-15: #56c02b;
+  --ods-16: #00689d;
+  --ods-17: #19486a;
+
+  /* ---------- Plataformas de Ação (borda superior dos cards) ---------- */
+  --plat-clima: var(--ods-14);
+  --plat-anticorrupcao: var(--ods-1);
+  --plat-agricultura: var(--ods-15);
+  --plat-direitos-humanos: var(--ods-10);
+  --plat-comunicacao: var(--ods-11);
+  --plat-agua: var(--ods-6);
+
+  /* ---------- Temas de publicação (tags) ---------- */
+  --tema-direitos-humanos: var(--un-blue);
+  --tema-meio-ambiente: var(--teal-600);
+  --tema-anticorrupcao: var(--ods-16);
+  --tema-trabalho: var(--ods-8);
+
+  /* =======================================================================
+     Tokens semânticos
+     ======================================================================= */
+  --color-primary: var(--navy-700);
+  --color-primary-strong: var(--navy-925);
+  --color-action: var(--teal-600);
+  --color-action-hover: var(--teal-700);
+  --color-accent: var(--red-600);
+  --color-accent-hover: #b8222b;
+  --color-highlight: var(--gold-500);
+
+  --color-bg: var(--white);
+  --color-bg-subtle: var(--gray-50);
+  --color-bg-muted: var(--gray-100);
+  --color-bg-dark: var(--navy-850);
+  --color-bg-darker: var(--navy-900);
+
+  --color-text: var(--navy-925);
+  --color-text-body: var(--gray-700);
+  --color-text-muted: var(--gray-500);
+  --color-text-on-dark: var(--white);
+  --color-text-on-dark-muted: var(--navy-200);
+
+  --color-border: var(--gray-150);
+  --color-border-strong: var(--gray-200);
+  --color-border-on-dark: rgb(255 255 255 / 0.15);
+  --color-surface-on-dark: rgb(255 255 255 / 0.12);
+
+  --color-focus: var(--un-blue);
+
+  /* ---------- Gradientes ---------- */
+  --gradient-gold: linear-gradient(90deg, var(--gold-600) 0%, var(--gold-300) 70%, var(--white) 100%);
+  --gradient-navy: linear-gradient(90deg, var(--navy-700) 0%, var(--navy-500) 100%);
+  --pattern-dots-dark: radial-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  --pattern-dots-size: 24px 24px;
+
+  /* =======================================================================
+     Tipografia — Outfit
+     ======================================================================= */
+  --font-sans: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --weight-thin: 100;
+  --weight-extralight: 200;
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-extrabold: 800;
+  --weight-black: 900;
+
+  /* Escala fluida (mobile → desktop) */
+  --text-display: clamp(2.5rem, 1.6rem + 3.6vw, 4.5rem); /* 40 → 72 */
+  --text-h1: clamp(2.25rem, 1.6rem + 2.6vw, 3.75rem); /* 36 → 60 */
+  --text-h2: clamp(1.875rem, 1.5rem + 1.5vw, 2.5rem); /* 30 → 40 */
+  --text-h3: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem); /* 22 → 28 */
+  --text-h4: 1.25rem; /* 20 */
+  --text-h5: 1.125rem; /* 18 */
+  --text-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem); /* 17 → 20 */
+  --text-body: 1rem; /* 16 */
+  --text-sm: 0.875rem; /* 14 */
+  --text-xs: 0.75rem; /* 12 */
+  --text-2xs: 0.625rem; /* 10 */
+
+  --leading-none: 1;
+  --leading-tight: 1.1;
+  --leading-snug: 1.3;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+
+  --tracking-tighter: -0.04em;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.06em;
+  --tracking-wider: 0.12em;
+  --tracking-widest: 0.18em;
+
+  /* =======================================================================
+     Espaçamento (base 4px)
+     ======================================================================= */
+  --space-0: 0;
+  --space-1: 0.25rem; /* 4 */
+  --space-2: 0.5rem; /* 8 */
+  --space-3: 0.75rem; /* 12 */
+  --space-4: 1rem; /* 16 */
+  --space-5: 1.25rem; /* 20 */
+  --space-6: 1.5rem; /* 24 */
+  --space-8: 2rem; /* 32 */
+  --space-10: 2.5rem; /* 40 */
+  --space-12: 3rem; /* 48 */
+  --space-16: 4rem; /* 64 */
+  --space-20: 5rem; /* 80 */
+  --space-24: 6rem; /* 96 */
+  --space-30: 7.5rem; /* 120 */
+
+  --section-y: clamp(72px, 8vw, 120px);
+  --gutter: clamp(20px, 4vw, 32px);
+
+  /* ---------- Layout ---------- */
+  --container: 1200px;
+  --container-wide: 1400px;
+  --container-narrow: 760px;
+  --measure: 42rem; /* largura máx. de parágrafos */
+  --header-h: 72px;
+
+  /* ---------- Bordas ---------- */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-3xl: 24px;
+  --radius-full: 9999px;
+
+  --border-thin: 1px;
+  --border-accent: 4px;
+
+  /* ---------- Sombras ---------- */
+  --shadow-xs: 0 1px 2px rgb(16 24 40 / 0.05);
+  --shadow-sm: 0 4px 20px rgb(0 0 0 / 0.03);
+  --shadow-md: 0 10px 40px rgb(0 0 0 / 0.1), 0 8px 20px rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 20px 50px rgb(0 0 0 / 0.08);
+  --shadow-xl: 0 12px 32px rgb(0 0 0 / 0.18);
+  --shadow-on-dark: 0 10px 30px rgb(0 0 0 / 0.48);
+  --shadow-action: 0 8px 24px -8px rgb(41 125 109 / 0.6);
+  --shadow-accent: 0 4px 20px rgb(220 50 50 / 0.18);
+
+  /* ---------- Movimento ---------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 350ms;
+  --lift-sm: translateY(-2px);
+  --lift-md: translateY(-6px);
+  --lift-lg: translateY(-8px);
+
+  /* ---------- Camadas ---------- */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 100;
+  --z-overlay: 500;
+  --z-modal: 1000;
+}
+
+/* Breakpoints de referência (use em @media):
+   sm 640px · md 768px · lg 1024px · xl 1280px · 2xl 1440px */

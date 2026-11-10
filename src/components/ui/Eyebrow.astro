@@ -1,0 +1,64 @@
+---
+/**
+ * Rótulo de seção: barra vertical colorida + etiqueta em caixa alta.
+ * Ex.: ▌[ NOSSA MAGNITUDE ]
+ * bar: gold · teal · navy · red  — tone: light (fundo claro) · dark (fundo escuro)
+ */
+interface Props {
+  bar?: 'gold' | 'teal' | 'navy' | 'red';
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+const { bar = 'gold', tone = 'light', class: className } = Astro.props;
+---
+
+<div class:list={['eyebrow', `eyebrow--${tone}`, `eyebrow--bar-${bar}`, className]}>
+  <span class="eyebrow__bar" aria-hidden="true"></span>
+  <span class="eyebrow__label"><slot /></span>
+</div>
+
+<style>
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .eyebrow__bar {
+    width: 6px;
+    height: 44px;
+    border-radius: var(--radius-full);
+    background: var(--_bar);
+  }
+  .eyebrow--bar-gold {
+    --_bar: var(--gold-500);
+  }
+  .eyebrow--bar-teal {
+    --_bar: var(--teal-600);
+  }
+  .eyebrow--bar-navy {
+    --_bar: var(--navy-700);
+  }
+  .eyebrow--bar-red {
+    --_bar: var(--red-500);
+  }
+  .eyebrow__label {
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    line-height: 1;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-xs);
+    border: 1px solid;
+  }
+  .eyebrow--light .eyebrow__label {
+    color: var(--navy-700);
+    background: rgb(30 50 80 / 0.05);
+    border-color: rgb(0 0 0 / 0.12);
+  }
+  .eyebrow--dark .eyebrow__label {
+    color: var(--white);
+    background: var(--color-surface-on-dark);
+    border-color: var(--color-border-on-dark);
+  }
+</style>

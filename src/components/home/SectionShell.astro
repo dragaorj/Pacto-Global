@@ -1,0 +1,127 @@
+---
+/**
+ * Casca padrão de seção da Home:
+ *   etiqueta · título em dois tons · descrição        [ação]
+ *   conteúdo (slot)
+ * No mobile, a ação vai para o fim da seção, com largura total.
+ */
+import SectionLabel from '../ui/SectionLabel.astro';
+import Button from '../ui/Button.astro';
+
+interface Props {
+  id?: string;
+  label: string;
+  t1: string;
+  t2?: string;
+  description?: string;
+  tone?: 'light' | 'dark';
+  bg?: 'default' | 'subtle' | 'navy';
+  actionLabel?: string;
+  actionHref?: string;
+}
+const { id, label, t1, t2, description, tone = 'light', bg = 'default', actionLabel, actionHref = '#' } = Astro.props;
+const headingId = id ? `${id}-titulo` : undefined;
+---
+
+<section id={id} class:list={['sec', `sec--${bg}`, `sec--${tone}`]} aria-labelledby={headingId}>
+  <div class="container sec__grid">
+    <header class="sec__head" data-reveal>
+      <SectionLabel tone={tone}>{label}</SectionLabel>
+      <h2 id={headingId} class="sec__title" data-two-tone>
+        {t1}
+        {t2 && <span>{t2}</span>}
+      </h2>
+      {description && <p class="sec__desc">{description}</p>}
+    </header>
+    {
+      actionLabel && (
+        <div class="sec__action" data-reveal>
+          <Button href={actionHref} variant={tone === 'dark' ? 'outline-light' : 'outline'} size="lg" iconRight="arrow-right">
+            {actionLabel}
+          </Button>
+        </div>
+      )
+    }
+    <div class="sec__body">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .sec {
+    padding-block: var(--section-y);
+  }
+  .sec--subtle {
+    background: var(--color-bg-subtle);
+  }
+  .sec--navy {
+    background: var(--navy-800);
+  }
+  :global([data-theme='dark']) .sec--navy {
+    background: #0a1830;
+  }
+  .sec__grid {
+    display: grid;
+    grid-template-areas: 'head' 'body' 'action';
+    row-gap: var(--space-10);
+  }
+  .sec__head {
+    grid-area: head;
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+  }
+  .sec__title {
+    max-width: 792px;
+    font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem);
+    font-weight: var(--weight-semibold);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+  }
+  .sec__title span {
+    display: block;
+    color: var(--color-text-strong-muted);
+  }
+  .sec__desc {
+    max-width: 588px;
+    font-size: var(--text-lead);
+    font-weight: var(--weight-light);
+    color: var(--color-text-muted);
+  }
+  .sec--dark .sec__title {
+    color: var(--white);
+  }
+  .sec--dark .sec__title span {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .sec--dark .sec__desc {
+    color: var(--color-text-on-dark-muted);
+  }
+  .sec__action {
+    grid-area: action;
+  }
+  .sec__action :global(.btn) {
+    width: 100%;
+  }
+  .sec__body {
+    grid-area: body;
+    min-width: 0;
+  }
+  @media (min-width: 768px) {
+    .sec__grid {
+      grid-template-columns: 1fr auto;
+      grid-template-areas: 'head action' 'body body';
+      row-gap: var(--space-14, 56px);
+    }
+    .sec__action {
+      align-self: end;
+    }
+    .sec__action :global(.btn) {
+      width: auto;
+    }
+  }
+</style>

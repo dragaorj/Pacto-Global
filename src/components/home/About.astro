@@ -1,0 +1,159 @@
+---
+import SectionLabel from '../ui/SectionLabel.astro';
+import { type Lang, useT } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const pillars = [1, 2, 3, 4].map((n) => ({
+  n: t(`pillar.${n}.n` as any),
+  t: t(`pillar.${n}.t` as any),
+  d: t(`pillar.${n}.d` as any),
+}));
+const themes = [
+  [t('pillar.1.t'), 'var(--tema-direitos-humanos)'],
+  [t('pillar.2.t'), 'var(--red-500)'],
+  [t('pillar.3.t'), 'var(--teal-600)'],
+  [t('pillar.4.t'), 'var(--tema-anticorrupcao)'],
+  [t('theme.agenda'), 'var(--gold-500)'],
+];
+---
+
+<section id="quem-somos" class="about" aria-labelledby="quem-somos-titulo">
+  <div class="container">
+    <div class="about__row" data-reveal>
+      <SectionLabel>{t('about.label')}</SectionLabel>
+      <h2 id="quem-somos-titulo" class="about__statement">
+        {t('about.p1')} <span>{t('about.p2')}</span>
+      </h2>
+    </div>
+    <ul role="list" class="about__pillars" data-stagger>
+      {
+        pillars.map((p) => (
+          <li>
+            <small>{p.n}</small>
+            <h3>{p.t}</h3>
+            <p>{p.d}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<div class="themes" aria-hidden="true">
+  <ul role="list" class="container themes__list">
+    {
+      themes.map(([label, color]) => (
+        <li>
+          <span class="themes__dot" style={`background:${color}`} />
+          {label}
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .about {
+    padding-block: calc(var(--section-y) + 8px) var(--section-y);
+  }
+  .about__row {
+    display: grid;
+    gap: var(--space-6);
+    align-items: start;
+  }
+  .about__statement {
+    font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);
+    font-weight: var(--weight-medium);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+  .about__statement span {
+    color: var(--color-text-strong-muted);
+  }
+  .about__pillars {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6) 16px;
+    margin: var(--space-12) 0 0;
+  }
+  .about__pillars li {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border-strong);
+  }
+  .about__pillars small {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  .about__pillars h3 {
+    font-size: var(--text-h5);
+  }
+  .about__pillars p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  @media (min-width: 1024px) {
+    .about__row {
+      grid-template-columns: 282px 1fr;
+      column-gap: 24px;
+    }
+    .about__pillars {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+    .about__pillars h3 {
+      font-size: var(--text-h4);
+    }
+  }
+
+  .themes {
+    border-block: 1px solid var(--color-border);
+  }
+  .themes__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-block: 0;
+    padding-block: 24px;
+  }
+  .themes__list li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 14px 0 12px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border-strong);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+  .themes__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  @media (min-width: 1024px) {
+    .themes__list {
+      justify-content: space-between;
+      padding-block: 32px;
+    }
+    .themes__list li {
+      height: auto;
+      padding: 0;
+      border: 0;
+      gap: 12px;
+      font-size: 1.375rem;
+    }
+    .themes__dot {
+      width: 10px;
+      height: 10px;
+    }
+  }
+</style>

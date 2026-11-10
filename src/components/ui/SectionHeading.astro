@@ -1,0 +1,111 @@
+---
+/**
+ * Cabeçalho padrão de seção (padrão que se repete na Home):
+ *   ▌[EYEBROW]
+ *   LINHA 1 (sólida)
+ *   LINHA 2 (destaque em gradiente: dourado no escuro, navy no claro)
+ *   Descrição                                   [ação opcional →]
+ */
+import Eyebrow from './Eyebrow.astro';
+import Button from './Button.astro';
+
+interface Props {
+  eyebrow?: string;
+  bar?: 'gold' | 'teal' | 'navy' | 'red';
+  title: string;
+  highlight?: string;
+  description?: string;
+  tone?: 'light' | 'dark';
+  size?: 'md' | 'lg';
+  uppercase?: boolean;
+  actionLabel?: string;
+  actionHref?: string;
+  headingLevel?: 'h1' | 'h2' | 'h3';
+}
+
+const {
+  eyebrow,
+  bar = 'gold',
+  title,
+  highlight,
+  description,
+  tone = 'light',
+  size = 'lg',
+  uppercase = true,
+  actionLabel,
+  actionHref,
+  headingLevel = 'h2',
+} = Astro.props;
+const H = headingLevel;
+---
+
+<header class:list={['sh', `sh--${tone}`, `sh--${size}`, { 'sh--upper': uppercase }]}>
+  <div class="sh__main">
+    {eyebrow && <Eyebrow bar={bar} tone={tone}>{eyebrow}</Eyebrow>}
+    <H class="sh__title">
+      <span class="sh__line">{title}</span>
+      {highlight && <span class:list={['sh__line', tone === 'dark' ? 'text-gold' : 'text-navy']}>{highlight}</span>}
+    </H>
+    {description && <p class="sh__desc">{description}</p>}
+  </div>
+  {
+    actionLabel && actionHref && (
+      <Button href={actionHref} variant="link" iconRight="arrow-right" class="sh__action">
+        {actionLabel}
+      </Button>
+    )
+  }
+</header>
+
+<style>
+  .sh {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+  }
+  .sh__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    max-width: 48rem;
+  }
+  .sh__title {
+    display: flex;
+    flex-direction: column;
+    font-weight: var(--weight-black);
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.02;
+  }
+  .sh--lg .sh__title {
+    font-size: var(--text-h1);
+  }
+  .sh--md .sh__title {
+    font-size: var(--text-h2);
+  }
+  .sh--upper .sh__title {
+    text-transform: uppercase;
+  }
+  .sh__desc {
+    font-size: var(--text-lead);
+    font-weight: var(--weight-light);
+    line-height: var(--leading-normal);
+    max-width: var(--measure);
+  }
+  .sh--light .sh__title {
+    color: var(--color-text);
+  }
+  .sh--light .sh__desc {
+    color: var(--color-text-muted);
+  }
+  .sh--dark .sh__title {
+    color: var(--white);
+  }
+  .sh--dark .sh__desc {
+    color: var(--color-text-on-dark-muted);
+  }
+  .sh--dark :global(.sh__action) {
+    --_fg: var(--white);
+  }
+</style>

@@ -1,0 +1,161 @@
+---
+/**
+ * Busca real do site: carrega /search-index.json (gerado no build a partir do CMS)
+ * só quando o usuário abre a busca. Atalhos: Ctrl/⌘+K ou "/".
+ */
+import Icon from '../ui/Icon.astro';
+import IconButton from '../ui/IconButton.astro';
+import { type Lang, useT } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const labels = {
+  empty: t('search.empty'),
+  none: t('search.none'),
+  results: t('search.results'),
+  noticia: t('search.type.noticia'),
+  evento: t('search.type.evento'),
+  publicacao: t('search.type.publicacao'),
+  plataforma: t('search.type.plataforma'),
+  movimento: t('search.type.movimento'),
+  pagina: t('search.type.pagina'),
+};
+---
+
+<dialog class="search" data-dialog="search" aria-label={t('search.open')} data-labels={JSON.stringify(labels)} data-lang={lang}>
+  <div class="search__box">
+    <form class="search__field" role="search" onsubmit="return false">
+      <Icon name="search" size={22} strokeWidth={1.6} />
+      <label for="search-input" class="visually-hidden">{t('search.open')}</label>
+      <input
+        id="search-input"
+        type="search"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder={t('search.placeholder')}
+        aria-controls="search-results"
+        aria-describedby="search-status"
+      />
+      <kbd>Esc</kbd>
+      <IconButton icon="close" label={t('search.close')} variant="soft" data-close />
+    </form>
+    <p id="search-status" class="search__status" aria-live="polite">{t('search.empty')}</p>
+    <ul id="search-results" role="list" class="search__results"></ul>
+  </div>
+</dialog>
+
+<style>
+  .search {
+    width: min(720px, calc(100vw - 32px));
+    max-height: min(640px, calc(100dvh - 96px));
+    margin: 72px auto auto;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-3xl);
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: 0 30px 80px rgb(10 15 30 / 0.3);
+    overflow: hidden;
+  }
+  .search::backdrop {
+    background: rgb(10 15 30 / 0.55);
+    backdrop-filter: blur(6px);
+  }
+  .search[open] {
+    animation: pop var(--duration-base) var(--ease-out);
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.98);
+    }
+  }
+  .search__box {
+    display: flex;
+    flex-direction: column;
+    max-height: inherit;
+  }
+  .search__field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 12px 12px 20px;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+  }
+  .search__field input {
+    flex: 1;
+    min-width: 0;
+    height: 48px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-size: 1.125rem;
+    color: var(--color-text);
+  }
+  .search__field input::-webkit-search-cancel-button {
+    display: none;
+  }
+  kbd {
+    display: none;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--color-border-strong);
+    font-family: inherit;
+    font-size: 12px;
+  }
+  @media (min-width: 768px) {
+    kbd {
+      display: inline-block;
+    }
+  }
+  .search__status {
+    padding: 14px 20px 6px;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .search__results {
+    margin: 0;
+    padding: 6px 8px 12px;
+    overflow-y: auto;
+  }
+  .search__results :global(a) {
+    display: grid;
+    gap: 2px;
+    padding: 12px 14px;
+    border-radius: var(--radius-xl);
+    text-decoration: none;
+  }
+  .search__results :global(a:hover),
+  .search__results :global(a:focus-visible) {
+    background: var(--color-bg-muted);
+    outline-offset: -2px;
+  }
+  .search__results :global(.r-type) {
+    font-size: 11px;
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-action);
+  }
+  .search__results :global(.r-title) {
+    font-weight: var(--weight-semibold);
+    color: var(--color-text);
+  }
+  .search__results :global(.r-text) {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .search__results :global(mark) {
+    background: color-mix(in srgb, var(--gold-500) 35%, transparent);
+    color: inherit;
+    border-radius: 3px;
+  }
+</style>

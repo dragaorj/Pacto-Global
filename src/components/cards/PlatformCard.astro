@@ -1,0 +1,86 @@
+---
+/** Card de Plataforma de Ação — Figma: Card/Plataforma */
+export const plataformas = {
+  clima: { color: 'var(--plat-clima)' },
+  anticorrupcao: { color: 'var(--plat-anticorrupcao)' },
+  agricultura: { color: 'var(--plat-agricultura)' },
+  'direitos-humanos': { color: 'var(--plat-direitos-humanos)' },
+  comunicacao: { color: 'var(--plat-comunicacao)' },
+  agua: { color: 'var(--plat-agua)' },
+} as const;
+export type Plataforma = keyof typeof plataformas;
+
+interface Props {
+  platform: Plataforma;
+  title: string;
+  description: string;
+  ods?: number[];
+  href?: string;
+}
+const { platform, title, description, ods = [], href = '#' } = Astro.props;
+---
+
+<a class="plat-card" href={href} style={`--_accent: ${plataformas[platform].color}`}>
+  {
+    ods.length > 0 && (
+      <ul class="plat-card__ods" aria-label="ODS relacionados">
+        {ods.map((n) => (
+          <li style={`background: var(--ods-${n})`} title={`ODS ${n}`}>
+            {n}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <h3 class="plat-card__title">{title}</h3>
+  <p class="plat-card__desc">{description}</p>
+</a>
+
+<style>
+  .plat-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-height: 190px;
+    padding: var(--space-5);
+    background: var(--color-surface);
+    border: 1px solid var(--_accent);
+    border-top-width: var(--border-accent);
+    border-radius: var(--radius-3xl);
+    text-decoration: none;
+    transition:
+      transform var(--duration-slow) var(--ease-out),
+      box-shadow var(--duration-slow) var(--ease-out);
+  }
+  .plat-card:hover {
+    transform: var(--lift-lg);
+    box-shadow: var(--shadow-lg);
+  }
+  .plat-card__ods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+  }
+  .plat-card__ods li {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 3px;
+    color: var(--white);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-bold);
+  }
+  .plat-card__title {
+    font-size: 1rem;
+    font-weight: var(--weight-bold);
+    color: var(--_accent);
+    line-height: var(--leading-snug);
+  }
+  .plat-card__desc {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+</style>

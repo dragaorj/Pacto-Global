@@ -1,0 +1,161 @@
+---
+/**
+ * Botão / link com aparência de botão.
+ * variant: primary (verde, CTA padrão) · accent (vermelho, hero) · light (branco, rodapé)
+ *          outline (borda, fundo claro) · outline-light (borda, fundo escuro) · link (texto + seta)
+ * size: sm · md · lg
+ */
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'accent' | 'light' | 'outline' | 'outline-light' | 'link';
+  size?: 'sm' | 'md' | 'lg';
+  iconLeft?: IconName;
+  iconRight?: IconName;
+  type?: 'button' | 'submit' | 'reset';
+  external?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  iconLeft,
+  iconRight,
+  type = 'button',
+  external = false,
+  class: className,
+  ...rest
+} = Astro.props as Props & Record<string, unknown>;
+
+const Tag = href ? 'a' : 'button';
+const iconSize = size === 'lg' ? 18 : size === 'sm' ? 14 : 16;
+---
+
+<Tag
+  href={href}
+  type={href ? undefined : type}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+  class:list={['btn', `btn--${variant}`, `btn--${size}`, className]}
+  {...rest}
+>
+  {iconLeft && <Icon name={iconLeft} size={iconSize} strokeWidth={2} />}
+  <span><slot /></span>
+  {iconRight && <Icon name={iconRight} size={iconSize} strokeWidth={2} />}
+</Tag>
+
+<style>
+  .btn {
+    --_bg: transparent;
+    --_fg: var(--color-text);
+    --_bd: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    font-family: var(--font-sans);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    line-height: 1;
+    color: var(--_fg);
+    background: var(--_bg);
+    border: 1.5px solid var(--_bd);
+    border-radius: var(--radius-full);
+    transition:
+      background-color var(--duration-base) var(--ease-out),
+      color var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out),
+      transform var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out);
+  }
+  .btn:hover {
+    transform: var(--lift-sm);
+  }
+  .btn:active {
+    transform: none;
+  }
+
+  /* tamanhos — altura fixa + largura mínima: CTAs lado a lado ficam iguais */
+  .btn--sm {
+    font-size: var(--text-2xs);
+    height: 32px;
+    min-width: 120px;
+    padding-inline: var(--space-3);
+  }
+  .btn--md {
+    font-size: var(--text-xs);
+    height: 40px;
+    min-width: 160px;
+    padding-inline: var(--space-5);
+  }
+  .btn--lg {
+    font-size: var(--text-sm);
+    height: 48px;
+    min-width: 200px;
+    padding-inline: var(--space-8);
+  }
+  .btn--link {
+    min-width: 0;
+  }
+
+  /* variantes */
+  .btn--primary {
+    --_bg: var(--color-action);
+    --_fg: var(--white);
+  }
+  .btn--primary:hover {
+    --_bg: var(--color-action-hover);
+  }
+  .btn--accent {
+    --_bg: var(--color-accent);
+    --_fg: var(--white);
+  }
+  .btn--accent:hover {
+    --_bg: var(--color-accent-hover);
+  }
+  .btn--light {
+    --_bg: var(--white);
+    --_fg: var(--navy-700);
+  }
+  .btn--light:hover {
+    --_bg: var(--navy-100);
+  }
+  .btn--outline {
+    --_fg: var(--navy-700);
+    --_bd: var(--navy-700);
+  }
+  .btn--outline:hover {
+    --_bg: var(--navy-700);
+    --_fg: var(--white);
+  }
+  .btn--outline-light {
+    --_fg: var(--white);
+    --_bd: rgb(255 255 255 / 0.5);
+  }
+  .btn--outline-light:hover {
+    --_bg: var(--white);
+    --_fg: var(--navy-700);
+    --_bd: var(--white);
+  }
+  .btn--link {
+    --_fg: var(--color-text);
+    padding-inline: 0;
+    letter-spacing: var(--tracking-wider);
+  }
+  .btn--link:hover {
+    transform: none;
+    --_fg: var(--color-action);
+  }
+  .btn--link :global(.icon) {
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .btn--link:hover :global(.icon:last-child) {
+    transform: translateX(3px);
+  }
+</style>

@@ -1,0 +1,86 @@
+hero:
+  - categoria: Eventos · Genebra 2026
+    titulo: 15º Fórum Mundial sobre
+    destaque: Empresas e Direitos Humanos
+    descricao: 'Vozes do Brasil na agenda local-global: a Rede Brasil leva a experiência das empresas brasileiras ao principal encontro da ONU sobre o tema.'
+    link: '#eventos'
+    video: ''
+    imagem: /src/assets/images/hero/forum-genebra.png
+    posicao: right
+    en:
+      titulo: 15th UN Forum on
+      destaque: Business and Human Rights
+      descricao: 'Voices from Brazil on the local-global agenda: the Brazil Network brings the experience of Brazilian companies to the main UN meeting on the subject.'
+    es:
+      titulo: 15º Foro Mundial sobre
+      destaque: Empresas y Derechos Humanos
+      descricao: 'Voces de Brasil en la agenda local-global: la Red Brasil lleva la experiencia de las empresas brasileñas al principal encuentro de la ONU sobre el tema.'
+  - categoria: CoP 2026
+    titulo: Comunicação de Progresso
+    destaque: reporte o avanço da sua empresa
+    descricao: A CoP é o compromisso anual de transparência dos participantes do Pacto Global. Veja prazos, o questionário e materiais de apoio.
+    link: '#'
+    video: ''
+    imagem: /src/assets/images/hero/cop.png
+    posicao: right
+    en:
+      titulo: Communication on Progress
+      destaque: report your company's progress
+      descricao: The CoP is the annual transparency commitment of UN Global Compact participants. See deadlines, the questionnaire and support materials.
+    es:
+      titulo: Comunicación sobre el Progreso
+      destaque: informe el avance de su empresa
+      descricao: La CoP es el compromiso anual de transparencia de los participantes del Pacto Global. Consulte plazos, el cuestionario y materiales de apoyo.
+  - categoria: SDGs in Brazil
+    titulo: Rede Brasil leva evidências
+    destaque: à sede da ONU em Nova York
+    descricao: Sustentabilidade empresarial, direitos humanos e o debate sobre crime organizado no principal palco das Nações Unidas.
+    link: /noticias/rede-brasil-leva-evidencias-a-onu
+    video: ''
+    imagem: /src/assets/images/noticias/rede-brasil-nova-york.jpg
+    posicao: center
+    en:
+      titulo: Brazil Network brings evidence
+      destaque: to UN Headquarters in New York
+      descricao: Corporate sustainability, human rights and the debate on organized crime on the main stage of the United Nations.
+    es:
+      titulo: La Red Brasil lleva evidencias
+      destaque: a la sede de la ONU en Nueva York
+      descricao: Sostenibilidad empresarial, derechos humanos y el debate sobre el crimen organizado en el principal escenario de las Naciones Unidas.
+  - categoria: Agenda
+    titulo: 4º Open House Brasil 2026
+    destaque: Raízes da Integridade
+    descricao: Sustentabilidade e ética no agronegócio. Encontro online em 5 de novembro.
+    link: '#eventos'
+    video: ''
+    imagem: /src/assets/images/eventos/open-house-brasil-2026.jpeg
+    posicao: center
+    en:
+      titulo: 4th Open House Brazil 2026
+      destaque: Roots of Integrity
+      descricao: Sustainability and ethics in agribusiness. Online meeting on November 5.
+    es:
+      titulo: 4º Open House Brasil 2026
+      destaque: Raíces de la Integridad
+      descricao: Sostenibilidad y ética en el agronegocio. Encuentro en línea el 5 de noviembre.
+magnitude:
+  titulo: A maior iniciativa de
+  destaque: sustentabilidade corporativa do mundo.
+  descricao: Conectando estratégias empresariais aos Dez Princípios Universais. Saiba como podemos apoiar sua empresa nessa jornada de transformação de impacto global.
+  numeros:
+    - valor: '22.485'
+      rotulo: Empresas
+      sublegenda: Comprometidas
+      icone: building
+    - valor: '2.577'
+      rotulo: Não empresariais
+      sublegenda: Organizações
+      icone: landmark
+    - valor: '70'
+      rotulo: Redes locais
+      sublegenda: Atuação regional
+      icone: map-pin
+    - valor: '25.509'
+      rotulo: Participantes
+      sublegenda: Total da rede
+      icone: users

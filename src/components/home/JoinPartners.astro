@@ -1,0 +1,192 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Button from '../ui/Button.astro';
+import { type Lang, useT } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  partners: { name: string; logo?: ImageMetadata; href?: string }[];
+}
+const { lang, partners } = Astro.props;
+const t = useT(lang);
+---
+
+<section id="aderir" class="join" aria-labelledby="aderir-titulo">
+  <div class="container">
+    <div class="join__card" data-reveal>
+      <div class="join__txt">
+        <h2 id="aderir-titulo">{t('join.t1')} <span>{t('join.t2')}</span></h2>
+        <p>{t('join.d')}</p>
+      </div>
+      <div class="join__btns">
+        <Button href="#" size="lg" iconRight="arrow-right">{t('cta.join')}</Button>
+        <Button href="#" variant="outline-light" size="lg" iconRight="arrow-right">{t('cta.contact')}</Button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="partners" aria-labelledby="parceiros-titulo">
+  <div class="container">
+    <div class="partners__top">
+      <h2 id="parceiros-titulo">{t('partners.title')}</h2>
+      <p class="partners__sponsor">
+        <span>{t('partners.sponsor')}</span>
+        <img src="/images/logos/apoiadores/aegea.svg" alt="Aegea" width="104" height="28" loading="lazy" />
+      </p>
+    </div>
+    <ul role="list" class="partners__list" data-stagger>
+      {
+        partners.map((p) => (
+          <li>
+            {p.logo && p.logo.format === 'svg' ? (
+              <img src={p.logo.src} alt={p.name} width={p.logo.width} height={p.logo.height} loading="lazy" decoding="async" />
+            ) : p.logo ? (
+              <Picture src={p.logo} alt={p.name} formats={['avif', 'webp']} widths={[180, 360]} sizes="180px" quality={80} loading="lazy" />
+            ) : (
+              <span>{p.name}</span>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .join {
+    padding-block: var(--section-y) 0;
+  }
+  .join__card {
+    position: relative;
+    display: grid;
+    gap: var(--space-8);
+    padding: 40px 24px;
+    border-radius: var(--radius-3xl);
+    background: var(--color-bg-dark);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .join__card::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: 520px;
+    height: 520px;
+    right: -160px;
+    top: -200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(41 125 109 / 0.45), transparent 65%);
+  }
+  .join h2 {
+    color: var(--white);
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+    font-weight: var(--weight-semibold);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    max-width: 792px;
+  }
+  .join h2 span {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .join p {
+    margin-top: 16px;
+    color: var(--navy-200);
+    font-size: var(--text-lead);
+    font-weight: var(--weight-light);
+    max-width: 588px;
+  }
+  .join__btns {
+    display: grid;
+    gap: 12px;
+  }
+  .join__btns :global(.btn) {
+    width: 100%;
+  }
+  @media (min-width: 1024px) {
+    .join__card {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      padding: 88px 96px;
+    }
+    .join__btns :global(.btn) {
+      width: 200px;
+    }
+  }
+
+  .partners {
+    padding-block: var(--section-y);
+  }
+  .partners__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: var(--space-10);
+  }
+  .partners__top h2 {
+    font-size: var(--text-body);
+    font-weight: var(--weight-regular);
+    color: var(--color-text-muted);
+  }
+  .partners__sponsor {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .partners__sponsor img {
+    height: 28px;
+    width: auto;
+  }
+  .partners__list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px 16px;
+    margin: 0;
+    align-items: center;
+  }
+  .partners__list li {
+    display: grid;
+    place-items: center;
+    height: 48px;
+  }
+  .partners__list :global(img) {
+    max-height: 48px;
+    max-width: 100%;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: 0.75;
+    transition:
+      filter var(--duration-base),
+      opacity var(--duration-base);
+  }
+  .partners__list li:hover :global(img) {
+    filter: none;
+    opacity: 1;
+  }
+  :global([data-theme='dark']) .partners__list :global(img),
+  :global([data-theme='dark']) .partners__sponsor img {
+    filter: grayscale(1) brightness(0) invert(1);
+    opacity: 0.7;
+  }
+  @media (min-width: 1024px) {
+    .partners__list {
+      grid-template-columns: repeat(6, 1fr);
+      gap: 32px 24px;
+    }
+    .partners__list li {
+      height: 64px;
+    }
+    .partners__list :global(img) {
+      max-height: 56px;
+    }
+  }
+</style>

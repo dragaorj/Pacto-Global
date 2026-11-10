@@ -1,0 +1,44 @@
+---
+/**
+ * Wrapper de seção com os fundos do site.
+ * tone: white · subtle (#F7FAFC) · muted (#F3F4F6) · dark (navy pontilhado) · darker (navy rodapé)
+ */
+interface Props {
+  tone?: 'white' | 'subtle' | 'muted' | 'dark' | 'darker';
+  width?: 'default' | 'wide' | 'narrow';
+  id?: string;
+  class?: string;
+}
+const { tone = 'white', width = 'default', id, class: className } = Astro.props;
+---
+
+<section id={id} class:list={['section', `section--${tone}`, className]}>
+  <div class:list={['container', { 'container--wide': width === 'wide', 'container--narrow': width === 'narrow' }]}>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--section-y);
+  }
+  .section--white {
+    background: var(--white);
+  }
+  .section--subtle {
+    background: var(--color-bg-subtle);
+  }
+  .section--muted {
+    background: var(--color-bg-muted);
+  }
+  .section--dark {
+    background-color: var(--color-bg-dark);
+    background-image: var(--pattern-dots-dark);
+    background-size: var(--pattern-dots-size);
+    color: var(--color-text-on-dark);
+  }
+  .section--darker {
+    background: var(--color-bg-darker);
+    color: var(--color-text-on-dark);
+  }
+</style>

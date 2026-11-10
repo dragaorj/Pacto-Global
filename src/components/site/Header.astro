@@ -1,0 +1,529 @@
+---
+/**
+ * Header fixo — Figma: Header (Sobre imagem · Topo · Rolagem).
+ * Sobre o banner: transparente e claro. Ao rolar (>40px): branco translúcido com blur.
+ * Desktop ≥1200px: menu em pílula + pílula de utilidades + CTA (tudo 48px).
+ * Mobile: logo + busca + menu (gaveta com idioma, tema, acessibilidade e CTA).
+ */
+import Icon from '../ui/Icon.astro';
+import IconButton from '../ui/IconButton.astro';
+import Button from '../ui/Button.astro';
+import { type Lang, useT, localePath, languages } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  path: string;
+  overHero?: boolean;
+}
+const { lang, path, overHero = false } = Astro.props;
+const t = useT(lang);
+const home = localePath(lang, '/');
+
+const nav = [
+  { label: t('nav.home'), href: home, current: path === '/' },
+  { label: t('nav.about'), href: `${home}#quem-somos` },
+  {
+    label: t('nav.knowledge'),
+    children: [
+      { label: t('nav.sub.publications'), href: `${home}#publicacoes` },
+      { label: t('nav.sub.platforms'), href: `${home}#plataformas` },
+      { label: t('nav.sub.principles'), href: `${home}#quem-somos` },
+    ],
+  },
+  {
+    label: t('nav.agenda'),
+    children: [
+      { label: t('nav.sub.events'), href: `${home}#eventos` },
+      { label: t('nav.sub.cop'), href: '#' },
+    ],
+  },
+  { label: t('nav.movements'), href: `${home}#movimentos` },
+  { label: t('nav.news'), href: `${home}#noticias` },
+];
+const langs = Object.entries(languages) as [Lang, string][];
+---
+
+<header class="hdr" data-header data-over={overHero ? 'true' : 'false'}>
+  <div class="hdr__inner container">
+    <a class="hdr__logo" href={home} aria-label="Pacto Global da ONU – Rede Brasil">
+      <img class="logo logo--color" src="/images/logos/pacto/pacto-global-colorido.svg" alt="" width="136" height="48" loading={overHero ? "lazy" : "eager"} />
+      <img class="logo logo--white" src="/images/logos/pacto/pacto-global-branco.svg" alt="" width="44" height="56" loading={overHero ? "eager" : "lazy"} />
+    </a>
+
+    <nav class="hdr__nav" aria-label="Principal">
+      <ul role="list" class="pill">
+        {
+          nav.map((item, i) =>
+            item.children ? (
+              <li class="dd" data-dropdown>
+                <button class="pill__item" type="button" aria-expanded="false" aria-controls={`dd-${i}`}>
+                  {item.label}
+                  <Icon name="chevron-down" size={14} strokeWidth={2} />
+                </button>
+                <ul role="list" class="dd__panel" id={`dd-${i}`}>
+                  {item.children.map((c) => (
+                    <li>
+                      <a href={c.href}>{c.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ) : (
+              <li>
+                <a class:list={['pill__item', { 'is-current': item.current }]} href={item.href} aria-current={item.current ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            )
+          )
+        }
+      </ul>
+    </nav>
+
+    <div class="hdr__actions">
+      <div class="pill pill--util">
+        <div class="dd dd--right" data-dropdown>
+          <button class="pill__item lang" type="button" aria-expanded="false" aria-controls="dd-lang" aria-label={`${lang.toUpperCase()} – ${t("lang.label")}`}>
+            <Icon name="globe" size={18} strokeWidth={1.6} />
+            <span>{lang.toUpperCase()}</span>
+          </button>
+          <ul role="list" class="dd__panel" id="dd-lang">
+            {
+              langs.map(([code, name]) => (
+                <li>
+                  <a href={localePath(code, path)} lang={code} hreflang={code} aria-current={code === lang ? 'true' : undefined}>
+                    <strong>{code.toUpperCase()}</strong> {name}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <span class="pill__sep" aria-hidden="true"></span>
+        <IconButton icon="accessibility" label={t('a11y.open')} data-open="a11y" />
+        <IconButton icon="moon" label={t('theme.label')} data-theme-toggle data-label-light={t('theme.toLight')} data-label-dark={t('theme.toDark')}>
+          <span class="ico-moon"><Icon name="moon" size={20} strokeWidth={1.6} /></span>
+          <span class="ico-sun"><Icon name="sun" size={20} strokeWidth={1.6} /></span>
+        </IconButton>
+        <IconButton icon="search" label={t('search.open')} data-open="search" />
+      </div>
+      <Button href="#aderir" size="lg" iconRight="arrow-right" class="hdr__cta">{t('cta.join')}</Button>
+    </div>
+
+    <div class="hdr__mobile">
+      <IconButton icon="search" label={t('search.open')} size="lg" variant="glass" data-open="search" class="m-btn" />
+      <IconButton icon="menu" label={t('nav.menu')} size="lg" variant="glass" data-open="menu" class="m-btn" aria-controls="menu-mobile" />
+    </div>
+  </div>
+</header>
+
+<!-- Menu mobile (gaveta) -->
+<dialog class="drawer" id="menu-mobile" data-dialog="menu" aria-label={t('nav.menu')}>
+  <div class="drawer__top">
+    <img src="/images/logos/pacto/pacto-global-colorido.svg" alt="Pacto Global – Rede Brasil" width="114" height="40" />
+    <IconButton icon="close" label={t('nav.close')} size="lg" variant="soft" data-close />
+  </div>
+  <div class="drawer__body">
+    <button class="drawer__search" type="button" data-open="search">
+      <Icon name="search" size={20} strokeWidth={1.6} />
+      <span>{t('search.placeholder')}</span>
+    </button>
+    <ul role="list" class="drawer__nav">
+      {
+        nav.map((item) =>
+          item.children ? (
+            <li>
+              <details>
+                <summary>
+                  {item.label}
+                  <Icon name="chevron-down" size={20} strokeWidth={1.6} />
+                </summary>
+                <ul role="list">
+                  {item.children.map((c) => (
+                    <li>
+                      <a href={c.href} data-close>
+                        {c.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </li>
+          ) : (
+            <li>
+              <a href={item.href} data-close aria-current={item.current ? 'page' : undefined}>
+                {item.label}
+                <Icon name="arrow-right" size={20} strokeWidth={1.6} />
+              </a>
+            </li>
+          )
+        )
+      }
+    </ul>
+    <div class="drawer__prefs">
+      <div class="seg" role="group" aria-label={t('lang.label')}>
+        {
+          langs.map(([code, name]) => (
+            <a class:list={['seg__opt', { 'is-on': code === lang }]} href={localePath(code, path)} lang={code} aria-label={name} aria-current={code === lang ? 'true' : undefined}>
+              {code.toUpperCase()}
+            </a>
+          ))
+        }
+      </div>
+      <div class="seg seg--theme" role="group" aria-label={t('theme.label')}>
+        <button class="seg__opt" type="button" data-set-theme="light" aria-label={t('theme.toLight')}><Icon name="sun" size={18} strokeWidth={1.6} /></button>
+        <button class="seg__opt" type="button" data-set-theme="dark" aria-label={t('theme.toDark')}><Icon name="moon" size={18} strokeWidth={1.6} /></button>
+      </div>
+    </div>
+    <button class="drawer__a11y" type="button" data-open="a11y">
+      <Icon name="accessibility" size={20} strokeWidth={1.6} />
+      {t('a11y.open')}
+    </button>
+    <Button href="#aderir" size="lg" iconRight="arrow-right" class="drawer__cta" data-close>{t('cta.join')}</Button>
+  </div>
+</dialog>
+
+<style>
+  .hdr {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: var(--z-sticky);
+    padding-block: 12px;
+    color: var(--color-text);
+    background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+    backdrop-filter: saturate(1.4) blur(18px);
+    border-bottom: 1px solid var(--color-border);
+    transition:
+      background-color var(--duration-slow) var(--ease-out),
+      padding var(--duration-slow) var(--ease-out),
+      border-color var(--duration-slow) var(--ease-out),
+      box-shadow var(--duration-slow) var(--ease-out);
+  }
+  @media (min-width: 1200px) {
+    .hdr {
+      padding-block: 24px;
+    }
+    .hdr.is-scrolled {
+      padding-block: 12px;
+      box-shadow: 0 8px 24px rgb(16 24 40 / 0.06);
+    }
+  }
+  /* sobre o banner */
+  .hdr[data-over='true']:not(.is-scrolled) {
+    background: transparent;
+    backdrop-filter: none;
+    border-color: transparent;
+    color: var(--white);
+  }
+  .hdr__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+  .hdr__logo {
+    display: block;
+    flex-shrink: 0;
+  }
+  .logo {
+    height: 44px;
+    width: auto;
+  }
+  .logo--white {
+    display: none;
+    height: 52px;
+  }
+  .hdr[data-over='true']:not(.is-scrolled) .logo--color {
+    display: none;
+  }
+  .hdr[data-over='true']:not(.is-scrolled) .logo--white {
+    display: block;
+  }
+  :global([data-theme='dark']) .logo--color {
+    filter: brightness(0) invert(1);
+  }
+
+  /* pílulas */
+  .hdr__nav,
+  .hdr__actions {
+    display: none;
+  }
+  .pill {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 48px;
+    padding: 4px;
+    margin: 0;
+    border-radius: var(--radius-full);
+    background: var(--color-bg-muted);
+  }
+  .hdr[data-over='true']:not(.is-scrolled) .pill {
+    background: rgb(255 255 255 / 0.12);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.18);
+    backdrop-filter: blur(16px);
+  }
+  .pill__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 40px;
+    padding-inline: 16px;
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    text-decoration: none;
+    color: inherit;
+    white-space: nowrap;
+    transition: background-color var(--duration-base) var(--ease-out);
+  }
+  .pill__item:hover {
+    background: color-mix(in srgb, var(--color-bg) 70%, transparent);
+  }
+  .hdr[data-over='true']:not(.is-scrolled) .pill__item:hover {
+    background: rgb(255 255 255 / 0.14);
+  }
+  .pill__item.is-current {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-weight: var(--weight-semibold);
+    box-shadow: 0 1px 3px rgb(16 24 40 / 0.1);
+  }
+  .pill__sep {
+    width: 1px;
+    height: 20px;
+    margin-inline: 4px;
+    background: currentColor;
+    opacity: 0.2;
+  }
+  .pill--util :global(.ibtn) {
+    --_fg: currentColor;
+  }
+  .lang {
+    padding-inline: 12px 14px;
+    font-weight: var(--weight-semibold);
+    font-size: 13px;
+  }
+  .ico-sun {
+    display: none;
+  }
+  :global([data-theme='dark']) .ico-sun {
+    display: block;
+  }
+  :global([data-theme='dark']) .ico-moon {
+    display: none;
+  }
+
+  /* dropdowns */
+  .dd {
+    position: relative;
+  }
+  .dd__panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    min-width: 240px;
+    padding: 8px;
+    border-radius: var(--radius-xl);
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: 0 16px 40px rgb(16 24 40 / 0.14);
+    border: 1px solid var(--color-border);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition:
+      opacity var(--duration-base) var(--ease-out),
+      transform var(--duration-base) var(--ease-out),
+      visibility var(--duration-base);
+  }
+  .dd--right .dd__panel {
+    left: auto;
+    right: 0;
+    min-width: 180px;
+  }
+  .dd.is-open .dd__panel {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+  .dd__panel a {
+    display: block;
+    padding: 10px 14px;
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    text-decoration: none;
+  }
+  .dd__panel a:hover,
+  .dd__panel a[aria-current] {
+    background: var(--color-bg-muted);
+  }
+  .dd [aria-expanded='true'] :global(.icon) {
+    transform: rotate(180deg);
+  }
+
+  /* mobile */
+  .hdr__mobile {
+    display: flex;
+    gap: 8px;
+  }
+  .hdr:not([data-over='true']) .m-btn,
+  .hdr.is-scrolled .m-btn {
+    --_bg: var(--color-bg-muted);
+    --_bd: transparent;
+    --_fg: var(--color-text);
+    backdrop-filter: none;
+  }
+
+  @media (min-width: 1200px) {
+    .hdr__nav,
+    .hdr__actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hdr__mobile {
+      display: none;
+    }
+    .logo {
+      height: 48px;
+    }
+    .logo--white {
+      height: 56px;
+    }
+  }
+
+  /* gaveta */
+  .drawer {
+    margin: 0 0 0 auto;
+    width: min(100vw, 420px);
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    padding: 0;
+    border: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+  .drawer::backdrop {
+    background: rgb(10 15 30 / 0.5);
+    backdrop-filter: blur(4px);
+  }
+  .drawer[open] {
+    display: flex;
+    flex-direction: column;
+    animation: slideIn var(--duration-slow) var(--ease-out);
+  }
+  @keyframes slideIn {
+    from {
+      transform: translateX(24px);
+      opacity: 0;
+    }
+  }
+  .drawer__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px var(--gutter);
+  }
+  :global([data-theme='dark']) .drawer__top img {
+    filter: brightness(0) invert(1);
+  }
+  .drawer__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-4) var(--gutter) var(--space-6);
+    overflow-y: auto;
+  }
+  .drawer__search,
+  .drawer__a11y {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 48px;
+    padding-inline: 16px;
+    border-radius: var(--radius-full);
+    color: var(--color-text-muted);
+    background: var(--color-bg-muted);
+    text-align: left;
+  }
+  .drawer__search span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .drawer__a11y {
+    background: none;
+    color: var(--color-text);
+    border: 1px solid var(--color-border-strong);
+  }
+  .drawer__nav {
+    margin: 0;
+  }
+  .drawer__nav > li > a,
+  .drawer__nav summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 14px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: var(--text-h4);
+    font-weight: var(--weight-medium);
+    text-decoration: none;
+    list-style: none;
+    cursor: pointer;
+  }
+  .drawer__nav summary::-webkit-details-marker {
+    display: none;
+  }
+  .drawer__nav :global(.icon) {
+    color: var(--color-text-muted);
+  }
+  .drawer__nav details[open] summary :global(.icon) {
+    transform: rotate(180deg);
+  }
+  .drawer__nav details ul {
+    padding: 8px 0 8px 16px;
+  }
+  .drawer__nav details a {
+    display: block;
+    padding-block: 10px;
+    color: var(--color-text-body);
+    text-decoration: none;
+  }
+  .drawer__prefs {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+  }
+  .seg {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: var(--radius-full);
+    background: var(--color-bg-muted);
+  }
+  .seg__opt {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    min-width: 48px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    text-decoration: none;
+  }
+  .seg__opt.is-on,
+  .seg__opt[aria-pressed='true'] {
+    background: var(--color-bg);
+    font-weight: var(--weight-semibold);
+    box-shadow: 0 1px 3px rgb(16 24 40 / 0.1);
+  }
+  .drawer :global(.drawer__cta) {
+    width: 100%;
+    margin-top: auto;
+  }
+</style>

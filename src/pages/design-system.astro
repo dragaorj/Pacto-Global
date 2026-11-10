@@ -1,0 +1,439 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/ui/Section.astro';
+import SectionHeading from '../components/ui/SectionHeading.astro';
+import Button from '../components/ui/Button.astro';
+import Badge from '../components/ui/Badge.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Stat from '../components/ui/Stat.astro';
+import Icon, { icons, type IconName } from '../components/ui/Icon.astro';
+import EventCard from '../components/cards/EventCard.astro';
+import NewsCard from '../components/cards/NewsCard.astro';
+import PublicationCard from '../components/cards/PublicationCard.astro';
+import PlatformCard from '../components/cards/PlatformCard.astro';
+import MovementCard from '../components/cards/MovementCard.astro';
+import PartnerTile from '../components/cards/PartnerTile.astro';
+import { cms, formatDate } from '../lib/cms';
+import { asset } from '../lib/images';
+
+// ---- conteúdo vindo do CMS (Keystatic) ----
+const home = await cms.singletons.home.read();
+const eventos = (await cms.collections.eventos.all()).sort((a, b) => (b.entry.data ?? '').localeCompare(a.entry.data ?? ''));
+const noticias = (await cms.collections.noticias.all()).sort((a, b) => (b.entry.data ?? '').localeCompare(a.entry.data ?? ''));
+const publicacoes = await cms.collections.publicacoes.all();
+const plataformas = (await cms.collections.plataformas.all()).sort((a, b) => (a.entry.ordem ?? 0) - (b.entry.ordem ?? 0));
+const movimentos = (await cms.collections.movimentos.all()).sort((a, b) => (a.entry.ordem ?? 0) - (b.entry.ordem ?? 0));
+const parceiros = await cms.collections.parceiros.all();
+
+const palette = {
+  Navy: ['950', '925', '900', '850', '800', '700', '600', '500', '400', '200', '100'].map((n) => `navy-${n}`),
+  'Dourado · Ação · Destaque': ['gold-600', 'gold-500', 'gold-300', 'teal-600', 'teal-700', 'red-500', 'red-600', 'un-blue'],
+  Neutros: ['white', 'gray-25', 'gray-50', 'gray-100', 'gray-150', 'gray-200', 'gray-400', 'gray-500', 'gray-600', 'gray-700', 'gray-800', 'gray-900', 'black'],
+  ODS: Array.from({ length: 17 }, (_, i) => `ods-${i + 1}`),
+};
+const typeScale = [
+  ['t-display', 'Display', 'Pacto Global'],
+  ['t-h1', 'H1', 'A maior iniciativa'],
+  ['t-h2', 'H2', 'Nossos eventos e fóruns'],
+  ['t-h3', 'H3', 'Plataformas de ação'],
+  ['t-h4', 'H4', 'SDGs in Brazil 2026: Crime organizado e IA'],
+  ['t-h5', 'H5', 'Ação pelo Clima'],
+  ['t-lead', 'Lead', 'Conectando estratégias empresariais aos Dez Princípios Universais.'],
+  ['t-body', 'Corpo', 'Saiba como podemos apoiar sua empresa nessa jornada de transformação de impacto global.'],
+  ['t-sm', 'Pequeno', 'Realizado na sede da ONU, em Nova York.'],
+  ['t-xs', 'Legenda', '05/11/2026 · online'],
+  ['t-overline', 'Overline', 'Nossa magnitude'],
+];
+const weights = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+const spaces = ['1', '2', '3', '4', '5', '6', '8', '10', '12', '16', '20', '24', '30'];
+const radii = ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', 'full'];
+const shadows = ['xs', 'sm', 'md', 'lg', 'xl', 'action', 'accent'];
+---
+
+<Base title="Design System · Pacto Global">
+  <Section tone="dark">
+    <div class="ds-intro">
+      <SectionHeading
+        tone="dark"
+        bar="teal"
+        eyebrow="Design System v1"
+        title="Pacto Global"
+        highlight="Rede Brasil"
+        description="Tokens, tipografia e componentes do novo site. Fonte: Outfit. Espelhado no Figma (arquivo Pacto Global, página Branding). Conteúdo de exemplo carregado do CMS Keystatic."
+        headingLevel="h1"
+      />
+      <div class="row">
+        <Button href="/keystatic" variant="primary" iconRight="arrow-right">Abrir CMS</Button>
+        <Button href="https://www.figma.com/design/dfrYLqYux9Tq0eRUY1r27e/Pacto-Global?node-id=1-2040" variant="outline-light" iconRight="arrow-up-right" external>Figma</Button>
+      </div>
+    </div>
+  </Section>
+
+  <!-- ================= CORES ================= -->
+  <Section tone="white">
+    <SectionHeading eyebrow="Fundamentos · 01" bar="navy" title="Cores" size="md" />
+    {
+      Object.entries(palette).map(([group, list]) => (
+        <div class="ds-block">
+          <h3 class="t-h5">{group}</h3>
+          <div class="swatches">
+            {list.map((t) => (
+              <figure class="swatch">
+                <span style={`background: var(--${t})`} />
+                <figcaption>--{t}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+    <div class="ds-block grads">
+      <div class="grad grad--dark"><span class="t-h1 text-gold">SUSTENTABILIDADE</span><code>.text-gold</code></div>
+      <div class="grad"><span class="t-h1 text-navy">EVENTOS E FÓRUNS</span><code>.text-navy</code></div>
+    </div>
+  </Section>
+
+  <!-- ================= TIPOGRAFIA ================= -->
+  <Section tone="subtle">
+    <SectionHeading eyebrow="Fundamentos · 02" bar="gold" title="Tipografia" highlight="Outfit" size="md" description="Fonte única, sem serifa, com 9 pesos. Tamanhos fluidos entre mobile e desktop." />
+    <div class="weights">
+      {weights.map((w) => <div><span style={`font-weight:${w}`}>Aa</span><small>{w}</small></div>)}
+    </div>
+    <div class="type-list">
+      {
+        typeScale.map(([cls, name, sample]) => (
+          <div class="type-row">
+            <code>.{cls}</code>
+            <span class:list={[cls]} style="color: var(--color-text)">{sample}</span>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+
+  <!-- ================= ESPAÇO / RAIO / SOMBRA ================= -->
+  <Section tone="white">
+    <SectionHeading eyebrow="Fundamentos · 03" bar="teal" title="Espaço, raios" highlight="e sombras" size="md" />
+    <div class="ds-grid-3">
+      <div class="spaces">
+        {spaces.map((s) => <div><code>--space-{s}</code><span style={`width: var(--space-${s})`} /></div>)}
+      </div>
+      <div class="radii">
+        {radii.map((r) => <div><span style={`border-radius: var(--radius-${r})`} /><code>{r}</code></div>)}
+      </div>
+      <div class="shadows">
+        {shadows.map((s) => <div><span style={`box-shadow: var(--shadow-${s})`} /><code>{s}</code></div>)}
+      </div>
+    </div>
+  </Section>
+
+  <!-- ================= COMPONENTES BÁSICOS ================= -->
+  <Section tone="muted">
+    <SectionHeading eyebrow="Componentes" bar="red" title="Botões, selos" highlight="e rótulos" size="md" />
+    <div class="ds-block">
+      <h3 class="t-h5">Button</h3>
+      {
+        (['sm', 'md', 'lg'] as const).map((size) => (
+          <div class="row">
+            <Button size={size} iconRight="arrow-right">Saiba mais</Button>
+            <Button size={size} variant="accent" iconRight="arrow-right">Saiba mais</Button>
+            <Button size={size} variant="outline">Ver detalhes</Button>
+            <Button size={size} variant="link" iconRight="arrow-right">Ver todos</Button>
+          </div>
+        ))
+      }
+      <div class="row on-dark">
+        <Button variant="light" iconLeft="megaphone">Acesse</Button>
+        <Button variant="outline-light" iconRight="arrow-right">Saiba mais</Button>
+        <Button variant="link" iconRight="arrow-right" class="link-light">Ver todos</Button>
+      </div>
+    </div>
+    <div class="ds-block">
+      <h3 class="t-h5">Badge</h3>
+      <div class="row">
+        <Badge variant="category">Eventos</Badge>
+        <Badge color="var(--tema-direitos-humanos)">Direitos Humanos</Badge>
+        <Badge color="var(--tema-anticorrupcao)">Anticorrupção</Badge>
+        <Badge color="var(--tema-meio-ambiente)">Meio Ambiente</Badge>
+        <span class="on-dark-chip"><Badge variant="soft">Português</Badge></span>
+      </div>
+    </div>
+    <div class="ds-block">
+      <h3 class="t-h5">Eyebrow</h3>
+      <div class="row">
+        <Eyebrow bar="gold">Agenda 2026</Eyebrow>
+        <Eyebrow bar="teal">Ambição 2030</Eyebrow>
+        <Eyebrow bar="navy">Entenda nossas</Eyebrow>
+        <Eyebrow bar="red">Eventos</Eyebrow>
+      </div>
+      <div class="row on-dark">
+        <Eyebrow tone="dark" bar="teal">Nossa magnitude</Eyebrow>
+        <Eyebrow tone="dark" bar="gold">Ambição 2030</Eyebrow>
+      </div>
+    </div>
+    <div class="ds-block">
+      <h3 class="t-h5">Ícones</h3>
+      <div class="icons">
+        {(Object.keys(icons) as IconName[]).map((n) => <div title={n}><Icon name={n} size={22} /><code>{n}</code></div>)}
+      </div>
+    </div>
+  </Section>
+
+  <!-- ================= EXEMPLOS COM CONTEÚDO DO CMS ================= -->
+  {
+    home?.magnitude && (
+      <Section tone="dark">
+        <SectionHeading
+          tone="dark"
+          bar="teal"
+          eyebrow="Nossa magnitude"
+          title={home.magnitude.titulo}
+          highlight={home.magnitude.destaque}
+          description={home.magnitude.descricao}
+          actionLabel="Saiba mais"
+          actionHref="#"
+        />
+        <div class="stats">
+          {home.magnitude.numeros.map((n) => (
+            <Stat icon={n.icone as IconName} value={n.valor} label={n.rotulo} sublabel={n.sublegenda} />
+          ))}
+        </div>
+      </Section>
+    )
+  }
+
+  <Section tone="subtle">
+    <SectionHeading eyebrow="Agenda 2026" title="Nossos" highlight="eventos e fóruns" description="Participe das discussões que moldam o futuro." actionLabel="Ver todos" actionHref="#" />
+    <div class="cards-4">
+      {eventos.map(({ entry }) => <EventCard title={entry.titulo} date={formatDate(entry.data)} location={entry.local} theme={entry.tema} status="Evento encerrado" image={asset(entry.capa)} />)}
+    </div>
+  </Section>
+
+  <Section tone="dark" class="mov-section">
+    <SectionHeading tone="dark" bar="teal" eyebrow="Ambição 2030" title="Nossos" highlight="movimentos" description="Iniciativas estratégicas que mobilizam empresas em torno de causas urgentes." />
+    <div class="movs">
+      {movimentos.map(({ entry }) => <MovementCard name={entry.nome} color={entry.cor} logo={asset(entry.logo)?.src} />)}
+    </div>
+  </Section>
+
+  <Section tone="white">
+    <SectionHeading eyebrow="Entenda nossas" bar="navy" title="Plataformas" highlight="de ação" description="Seis plataformas temáticas que estruturam como as empresas podem agir pelos ODS." />
+    <div class="cards-3">
+      {plataformas.map(({ entry }) => <PlatformCard platform={entry.cor} title={entry.titulo} description={entry.descricao} ods={entry.ods.filter((n): n is number => n != null)} />)}
+    </div>
+  </Section>
+
+  <Section tone="subtle">
+    <SectionHeading eyebrow="Inovação e tendências" bar="navy" title="Nossas" highlight="notícias" actionLabel="Ver todas" actionHref="#" />
+    <div class="cards-3">
+      {noticias.map(({ entry }) => <NewsCard title={entry.titulo} excerpt={entry.resumo} tag={entry.tag} image={asset(entry.capa)} />)}
+    </div>
+  </Section>
+
+  <Section tone="muted">
+    <SectionHeading eyebrow="Publicações e pesquisas" bar="gold" title="Conhecimento" highlight="em ação" actionLabel="Ver todas" actionHref="#" />
+    <div class="cards-4">
+      {publicacoes.map(({ entry }) => <PublicationCard title={entry.titulo} theme={entry.tema} language={entry.idioma} image={asset(entry.capa)} />)}
+    </div>
+    <div class="center"><Button size="lg" iconLeft="arrow-right">Ver todas as publicações</Button></div>
+  </Section>
+
+  <Section tone="white">
+    <SectionHeading eyebrow="Ecossistema" bar="navy" title="Nossos" highlight="parceiros" />
+    <div class="partners">
+      {parceiros.map(({ entry }) => <PartnerTile name={entry.nome} logo={asset(entry.logo)?.src} />)}
+    </div>
+  </Section>
+</Base>
+
+<style>
+  .ds-intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
+  .on-dark {
+    background: var(--color-bg-dark);
+    padding: var(--space-6);
+    border-radius: var(--radius-xl);
+  }
+  .on-dark :global(.link-light) {
+    --_fg: var(--white);
+  }
+  .on-dark-chip {
+    background: var(--navy-500);
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+  }
+  .ds-block {
+    margin-top: var(--space-12);
+  }
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
+  .swatch span {
+    display: block;
+    height: 64px;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgb(0 0 0 / 0.08);
+  }
+  .swatch figcaption,
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+  .grads {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-6);
+  }
+  .grad {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-8);
+    border-radius: var(--radius-xl);
+    background: var(--color-bg-subtle);
+    overflow: hidden;
+  }
+  .grad--dark {
+    background: var(--color-bg-dark);
+  }
+  .weights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+    margin-block: var(--space-12) var(--space-8);
+  }
+  .weights div {
+    display: flex;
+    flex-direction: column;
+  }
+  .weights span {
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--color-text);
+  }
+  .weights small {
+    color: var(--color-text-muted);
+  }
+  .type-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: var(--space-6);
+    align-items: baseline;
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    overflow-wrap: anywhere;
+  }
+  @media (max-width: 640px) {
+    .type-row {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+  }
+  .ds-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-12);
+    margin-top: var(--space-12);
+  }
+  .spaces div {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+  }
+  .spaces span {
+    height: 10px;
+    background: var(--color-action);
+    border-radius: 2px;
+  }
+  .radii,
+  .shadows {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: var(--space-6);
+    align-content: start;
+  }
+  .radii div,
+  .shadows div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .radii span {
+    aspect-ratio: 1;
+    background: var(--color-bg-muted);
+    border: 1.5px solid var(--navy-700);
+  }
+  .shadows span {
+    aspect-ratio: 1.4;
+    background: var(--white);
+    border-radius: var(--radius-xl);
+  }
+  .icons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+    color: var(--navy-700);
+  }
+  .icons div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    background: var(--white);
+    border-radius: var(--radius-lg);
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--space-10);
+    margin-top: var(--space-16);
+  }
+  .cards-4,
+  .cards-3,
+  .movs,
+  .partners {
+    display: grid;
+    gap: var(--space-6);
+    margin-top: var(--space-12);
+  }
+  .cards-4 {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  .cards-3 {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+  .movs {
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: var(--space-4);
+  }
+  .partners {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: var(--space-3);
+  }
+  :global(.mov-section) {
+    background: var(--navy-800) !important;
+  }
+  .center {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-12);
+  }
+</style>

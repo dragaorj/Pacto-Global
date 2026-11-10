@@ -1,0 +1,98 @@
+---
+import Base from '../../layouts/Base.astro';
+import Hero, { type Slide } from './Hero.astro';
+import About from './About.astro';
+import Numbers from './Numbers.astro';
+import Collections from './Collections.astro';
+import JoinPartners from './JoinPartners.astro';
+import { cms } from '../../lib/cms';
+import { asset } from '../../lib/images';
+import { type Lang, useT } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const fmt = (iso?: string | null) =>
+  iso ? new Date(`${iso}T12:00:00`).toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang, { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
+const fmtShort = (iso?: string | null) =>
+  iso ? new Date(`${iso}T12:00:00`).toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang, { day: '2-digit', month: '2-digit' }) : '';
+const byDate = <T extends { entry: { data?: string | null } }>(a: T, b: T) => (b.entry.data ?? '').localeCompare(a.entry.data ?? '');
+const byOrder = <T extends { entry: { ordem?: number | null } }>(a: T, b: T) => (a.entry.ordem ?? 0) - (b.entry.ordem ?? 0);
+
+const [home, noticias, eventos, publicacoes, plataformas, movimentos, parceiros] = await Promise.all([
+  cms.singletons.home.read(),
+  cms.collections.noticias.all(),
+  cms.collections.eventos.all(),
+  cms.collections.publicacoes.all(),
+  cms.collections.plataformas.all(),
+  cms.collections.movimentos.all(),
+  cms.collections.parceiros.all(),
+]);
+noticias.sort(byDate);
+eventos.sort(byDate);
+plataformas.sort(byOrder);
+movimentos.sort(byOrder);
+
+const slides: Slide[] = (home?.hero ?? []).map((s) => {
+  const tr = lang === 'pt' ? null : s[lang];
+  return {
+    categoria: s.categoria,
+    titulo: tr?.titulo || s.titulo,
+    destaque: tr?.destaque || s.destaque,
+    descricao: tr?.descricao || s.descricao,
+    link: s.link || '#',
+    video: s.video || undefined,
+    imagem: asset(s.imagem),
+    posicao: s.posicao,
+  };
+});
+
+const newsHref = (slug: string) => `/noticias/${slug}`;
+const headlines = [
+  ...noticias.slice(0, 3).map((n) => ({ title: n.entry.titulo, meta: `${t('news.label')} · ${fmtShort(n.entry.data)}`, href: newsHref(n.slug), image: asset(n.entry.capa) })),
+  ...eventos.slice(0, 1).map((e) => ({ title: e.entry.titulo, meta: `${t('nav.agenda')} · ${fmtShort(e.entry.data)}`, href: '#eventos', image: asset(e.entry.capa) })),
+];
+const magnitude = (home?.magnitude?.numeros ?? []).map((n) => n.valor);
+const localLabel: Record<string, Record<Lang, string>> = {
+  online: { pt: 'online', en: 'online', es: 'en línea' },
+  presencial: { pt: 'presencial', en: 'in person', es: 'presencial' },
+  hibrido: { pt: 'híbrido', en: 'hybrid', es: 'híbrido' },
+};
+---
+
+<Base lang={lang} overHero path="/">
+  <Hero lang={lang} slides={slides} headlines={headlines} />
+  <About lang={lang} />
+  <Numbers lang={lang} values={magnitude} image={asset('/src/assets/images/noticias/rede-brasil-nova-york.jpg')} />
+  <Collections
+    lang={lang}
+    kind="eventos"
+    items={eventos.slice(0, 4).map((e) => ({
+      title: e.entry.titulo,
+      href: e.entry.link || '#eventos',
+      image: asset(e.entry.capa),
+      date: fmt(e.entry.data),
+      location: localLabel[e.entry.local]?.[lang] ?? e.entry.local,
+      theme: e.entry.tema?.toUpperCase(),
+    }))}
+  />
+  <Collections lang={lang} kind="movimentos" items={movimentos.map((m) => ({ title: `Movimento ${m.entry.nome}`, href: m.entry.link || '#', image: asset(m.entry.logo) }))} />
+  <Collections
+    lang={lang}
+    kind="plataformas"
+    items={plataformas.map((p) => ({ title: p.entry.titulo, href: '#plataformas', color: p.entry.cor, excerpt: p.entry.descricao, ods: p.entry.ods.filter((n): n is number => n != null) }))}
+  />
+  <Collections
+    lang={lang}
+    kind="noticias"
+    items={noticias.map((n) => ({ title: n.entry.titulo, href: newsHref(n.slug), image: asset(n.entry.capa), excerpt: n.entry.resumo, tag: n.entry.tag, date: fmt(n.entry.data), featured: n.entry.destaque }))}
+  />
+  <Collections
+    lang={lang}
+    kind="publicacoes"
+    items={publicacoes.slice(0, 4).map((p) => ({ title: p.entry.titulo.toUpperCase(), href: p.entry.arquivo || '#', image: asset(p.entry.capa), theme: p.entry.tema, language: p.entry.idioma }))}
+  />
+  <JoinPartners lang={lang} partners={parceiros.map((p) => ({ name: p.entry.nome, logo: asset(p.entry.logo), href: p.entry.site ?? undefined }))} />
+</Base>

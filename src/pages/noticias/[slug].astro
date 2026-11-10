@@ -1,0 +1,68 @@
+---
+import { Picture } from 'astro:assets';
+import Markdoc from '@markdoc/markdoc';
+import Base from '../../layouts/Base.astro';
+import SectionLabel from '../../components/ui/SectionLabel.astro';
+import Button from '../../components/ui/Button.astro';
+import { cms } from '../../lib/cms';
+import { asset } from '../../lib/images';
+
+export async function getStaticPaths() {
+  const all = await cms.collections.noticias.all();
+  return all.map((n) => ({ params: { slug: n.slug } }));
+}
+
+const { slug } = Astro.params;
+const entry = await cms.collections.noticias.read(slug!);
+if (!entry) return Astro.redirect('/');
+const { node } = await entry.conteudo();
+const html = Markdoc.renderers.html(Markdoc.transform(node as any));
+const img = asset(entry.capa);
+const date = entry.data ? new Date(`${entry.data}T12:00:00`).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
+---
+
+<Base title={entry.titulo} description={entry.resumo} path={`/noticias/${slug}`}>
+  <article class="post container container--narrow">
+    <SectionLabel>{entry.tag}</SectionLabel>
+    <h1>{entry.titulo}</h1>
+    <p class="post__meta"><time datetime={entry.data ?? undefined}>{date}</time></p>
+    {entry.resumo && <p class="post__lead">{entry.resumo}</p>}
+    {img && <Picture src={img} alt="" formats={['avif', 'webp']} widths={[480, 760, 1140]} sizes="(min-width: 800px) 760px, 100vw" quality={70} loading="eager" fetchpriority="high" class="post__img" />}
+    <div class="post__body" set:html={html} />
+    <Button href="/#noticias" variant="outline" size="lg" iconLeft="arrow-left">Voltar às notícias</Button>
+  </article>
+</Base>
+
+<style>
+  .post {
+    display: grid;
+    gap: var(--space-6);
+    justify-items: start;
+    padding-top: calc(var(--header-h) + 48px);
+    padding-bottom: var(--section-y);
+  }
+  h1 {
+    font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+    font-weight: var(--weight-semibold);
+    letter-spacing: -0.025em;
+  }
+  .post__meta {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+  .post__lead {
+    font-size: var(--text-lead);
+    font-weight: var(--weight-light);
+  }
+  .post :global(.post__img),
+  .post :global(.post__img img) {
+    width: 100%;
+    border-radius: var(--radius-2xl);
+  }
+  .post__body {
+    display: grid;
+    gap: var(--space-4);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+</style>

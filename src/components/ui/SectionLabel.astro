@@ -1,0 +1,44 @@
+---
+/** Etiqueta de seção em pílula com bolinha — Figma: Section Label */
+interface Props {
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+const { tone = 'light', class: className } = Astro.props;
+---
+
+<span class:list={['label', `label--${tone}`, className]}><span class="dot" aria-hidden="true"></span><slot /></span>
+
+<style>
+  .label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 14px 0 12px;
+    border-radius: var(--radius-full);
+    font-size: 13px;
+    font-weight: var(--weight-medium);
+    white-space: nowrap;
+    width: fit-content;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .label--light {
+    background: color-mix(in srgb, var(--color-text) 6%, transparent);
+    color: var(--color-text);
+  }
+  .label--light .dot {
+    background: var(--color-action);
+  }
+  .label--dark {
+    background: rgb(255 255 255 / 0.12);
+    color: var(--white);
+  }
+  .label--dark .dot {
+    background: var(--gold-500);
+  }
+</style>

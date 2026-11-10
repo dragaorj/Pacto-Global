@@ -1,0 +1,95 @@
+---
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+/** Card de notícia — Figma: Card/Notícia */
+interface Props {
+  title: string;
+  excerpt?: string;
+  tag?: string;
+  href?: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+}
+const { title, excerpt, tag, href = '#', image, imageAlt = '' } = Astro.props;
+---
+
+<article class="news-card">
+  <div class="news-card__media">
+    {image ? <Picture src={image} alt={imageAlt} formats={["avif","webp"]} widths={[300, 450, 600, 800]} sizes="(min-width: 1024px) 282px, (min-width: 768px) 45vw, 90vw" quality={62} loading="lazy" decoding="async" /> : <div class="ph" aria-hidden="true" />}
+  </div>
+  <div class="news-card__body">
+    <h3 class="news-card__title"><a href={href}>{title}</a></h3>
+    {excerpt && <p class="news-card__excerpt">{excerpt}</p>}
+    {tag && <span class="news-card__tag">{tag}</span>}
+  </div>
+</article>
+
+<style>
+  .news-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-3xl);
+    overflow: hidden;
+    transition:
+      transform var(--duration-slow) var(--ease-out),
+      box-shadow var(--duration-slow) var(--ease-out);
+  }
+  .news-card:hover {
+    transform: var(--lift-md);
+    box-shadow: var(--shadow-md);
+  }
+  .news-card__media {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+  .news-card__media :global(picture),
+  .news-card__media :global(img),
+  .ph {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ph {
+    background: linear-gradient(135deg, var(--navy-700), var(--navy-500));
+  }
+  .news-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    flex: 1;
+  }
+  .news-card__title {
+    font-size: var(--text-h4);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-snug);
+  }
+  .news-card__title a {
+    text-decoration: none;
+  }
+  .news-card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .news-card__excerpt {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-light);
+    color: var(--color-text-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .news-card__tag {
+    margin-top: auto;
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-text);
+  }
+</style>

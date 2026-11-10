@@ -1,0 +1,110 @@
+---
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+/** Card de publicação — Figma: Card/Publicação */
+import Badge from '../ui/Badge.astro';
+
+export const temas = {
+  'direitos-humanos': { label: 'Direitos Humanos', color: 'var(--tema-direitos-humanos)' },
+  'meio-ambiente': { label: 'Meio Ambiente', color: 'var(--tema-meio-ambiente)' },
+  anticorrupcao: { label: 'Anticorrupção', color: 'var(--tema-anticorrupcao)' },
+  trabalho: { label: 'Trabalho', color: 'var(--tema-trabalho)' },
+} as const;
+export type Tema = keyof typeof temas;
+
+interface Props {
+  title: string;
+  theme?: Tema;
+  language?: string;
+  href?: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  linkLabel?: string;
+}
+const { title, theme, language = "Português", href = "#", image, imageAlt = "", linkLabel = "Documento completo" } = Astro.props;
+const t = theme ? temas[theme] : undefined;
+---
+
+<article class="pub-card">
+  <div class="pub-card__media">
+    {image ? <Picture src={image} alt={imageAlt} formats={["avif","webp"]} widths={[300, 450, 600, 800]} sizes="(min-width: 1024px) 282px, 45vw" quality={62} loading="lazy" decoding="async" /> : <div class="ph" aria-hidden="true" />}
+    {t && <Badge variant="pill" color={t.color} class="pub-card__theme">{t.label}</Badge>}
+    {language && <Badge variant="soft" class="pub-card__lang">{language}</Badge>}
+  </div>
+  <div class="pub-card__body">
+    <h3 class="pub-card__title">{title}</h3>
+    <a class="pub-card__link" href={href}>{linkLabel} →</a>
+  </div>
+</article>
+
+<style>
+  .pub-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+      overflow: hidden;
+    transition:
+      transform var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out);
+  }
+  .pub-card:hover {
+    transform: var(--lift-md);
+    box-shadow: var(--shadow-md);
+  }
+  .pub-card__media {
+    position: relative;
+    aspect-ratio: 23 / 25;
+    overflow: hidden;
+  }
+  .pub-card__media :global(picture),
+  .pub-card__media :global(img),
+  .ph {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ph {
+    background: linear-gradient(135deg, var(--navy-700), var(--navy-500));
+  }
+  .pub-card__media :global(.pub-card__theme) {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+  }
+  .pub-card__media :global(.pub-card__lang) {
+    position: absolute;
+    bottom: var(--space-3);
+    left: var(--space-3);
+  }
+  .pub-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    flex: 1;
+  }
+  .pub-card__title {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+  .pub-card__link {
+    margin-top: auto;
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--tema-direitos-humanos);
+  }
+  .pub-card__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+</style>

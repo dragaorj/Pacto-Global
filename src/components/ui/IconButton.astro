@@ -1,0 +1,80 @@
+---
+/** Botão só de ícone — Figma: Icon Button. Alturas iguais às do Button: sm 32 · md 40 · lg 48 */
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  [key: string]: any;
+  icon: IconName;
+  label: string;
+  size?: 'sm' | 'md' | 'lg';
+  variant?: 'ghost' | 'outline' | 'soft' | 'glass' | 'solid';
+  href?: string;
+}
+const { icon, label, size = 'md', variant = 'ghost', href, class: className, ...rest } = Astro.props;
+const Tag = href ? 'a' : 'button';
+const px = { sm: 16, md: 20, lg: 20 }[size];
+---
+
+<Tag
+  href={href}
+  type={href ? undefined : 'button'}
+  aria-label={label}
+  title={label}
+  class:list={['ibtn', `ibtn--${size}`, `ibtn--${variant}`, className]}
+  {...rest}
+>
+  <slot><Icon name={icon} size={px} strokeWidth={1.6} /></slot>
+</Tag>
+
+<style>
+  .ibtn {
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: var(--radius-full);
+    color: var(--_fg, var(--color-text));
+    background: var(--_bg, transparent);
+    border: 1px solid var(--_bd, transparent);
+    text-decoration: none;
+    transition:
+      background-color var(--duration-base) var(--ease-out),
+      color var(--duration-base) var(--ease-out);
+  }
+  .ibtn--sm {
+    width: 32px;
+    height: 32px;
+  }
+  .ibtn--md {
+    width: 40px;
+    height: 40px;
+  }
+  .ibtn--lg {
+    width: 48px;
+    height: 48px;
+  }
+  .ibtn--ghost:hover {
+    --_bg: var(--color-surface);
+  }
+  .ibtn--outline {
+    --_bd: var(--color-border-strong);
+  }
+  .ibtn--outline:hover {
+    --_bg: var(--color-bg-muted);
+  }
+  .ibtn--soft {
+    --_bg: var(--color-bg-muted);
+  }
+  .ibtn--glass {
+    --_bg: rgb(255 255 255 / 0.12);
+    --_bd: rgb(255 255 255 / 0.2);
+    --_fg: var(--white);
+    backdrop-filter: blur(12px);
+  }
+  .ibtn--glass:hover {
+    --_bg: rgb(255 255 255 / 0.22);
+  }
+  .ibtn--solid {
+    --_bg: var(--color-primary);
+    --_fg: var(--white);
+  }
+</style>

@@ -1,0 +1,186 @@
+---
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import IconButton from '../ui/IconButton.astro';
+import { type Lang, useT } from '../../i18n/ui';
+import { cms } from '../../lib/cms';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const cfg = await cms.singletons.configuracoes.read();
+const cols = [
+  {
+    title: t('footer.institutional'),
+    links: [t('footer.l.about'), t('footer.l.principles'), t('footer.l.sdgs'), t('footer.l.members'), t('footer.l.join'), t('footer.l.cop')],
+  },
+  { title: t('footer.policies'), links: [t('footer.l.cookies'), t('footer.l.privacyLp'), t('footer.l.privacyBot'), t('footer.l.jobs')] },
+];
+const socials = [
+  ['linkedin', 'LinkedIn', cfg?.linkedin || 'https://www.linkedin.com/company/pactoglobal/'],
+  ['instagram', 'Instagram', cfg?.instagram || 'https://www.instagram.com/pactoglobalonubr/'],
+  ['youtube', 'YouTube', cfg?.youtube || 'https://www.youtube.com/@pactoglobalonubr'],
+  ['x', 'X', cfg?.x || 'https://x.com/pactoglobalonu'],
+] as const;
+---
+
+<footer class="ft">
+  <div class="container">
+    <div class="ft__grid">
+      <div class="ft__brand">
+        <img src="/images/logos/pacto/pacto-global-branco.svg" alt="Pacto Global – Rede Brasil" width="74" height="96" loading="lazy" />
+        <p>{t('footer.tagline')}</p>
+        <ul role="list" class="ft__social">
+          {
+            socials.map(([icon, label, href]) => (
+              <li>
+                <IconButton icon={icon} label={label} href={href} variant="glass" size="md" target="_blank" rel="noopener noreferrer" />
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      {
+        cols.map((c) => (
+          <details class="ft__col" open>
+            <summary>
+              {c.title}
+              <Icon name="chevron-down" size={20} strokeWidth={1.6} />
+            </summary>
+            <ul role="list">
+              {c.links.map((l) => (
+                <li>
+                  <a href="#">{l}</a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        ))
+      }
+      <div class="ft__col ft__service">
+        <p class="ft__title">{t('footer.service')}</p>
+        <Button href="#" variant="light" size="md" iconLeft="megaphone">{t('footer.press')}</Button>
+        <Button href="#" variant="light" size="md" iconLeft="clipboard">{t('footer.report')}</Button>
+      </div>
+    </div>
+    <div class="ft__bottom">
+      <p>© 2026 Pacto Global da ONU – Rede Brasil. {t('footer.rights')}</p>
+      <p>
+        <a href="#">{t('footer.terms')}</a> · <a href="#">{t('footer.privacy')}</a> ·
+        <button type="button" data-open="a11y">{t('footer.a11y')}</button>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ft {
+    padding-block: var(--space-16) var(--space-8);
+    background: var(--color-bg-darker);
+    color: var(--color-text-on-dark-muted);
+  }
+  :global([data-theme='dark']) .ft {
+    background: #070d19;
+  }
+  .ft__grid {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .ft__brand {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+  }
+  .ft__brand img {
+    height: 88px;
+    width: auto;
+  }
+  .ft__brand p {
+    max-width: 280px;
+    font-size: var(--text-sm);
+  }
+  .ft__social {
+    display: flex;
+    gap: 8px;
+    margin: 0;
+  }
+  .ft__col summary,
+  .ft__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 16px;
+    border-bottom: 1px solid rgb(255 255 255 / 0.12);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--gold-500);
+    list-style: none;
+    cursor: pointer;
+  }
+  .ft__col summary::-webkit-details-marker {
+    display: none;
+  }
+  .ft__col ul {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding-block: 16px;
+  }
+  .ft__col ul a {
+    font-size: var(--text-sm);
+    color: rgb(255 255 255 / 0.72);
+    text-decoration: none;
+  }
+  .ft__col ul a:hover {
+    color: var(--white);
+  }
+  .ft__service {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+  }
+  .ft__service :global(.btn) {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .ft__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: var(--space-12);
+    padding-top: var(--space-6);
+    border-top: 1px solid rgb(255 255 255 / 0.12);
+    font-size: var(--text-xs);
+  }
+  .ft__bottom a,
+  .ft__bottom button {
+    color: inherit;
+    font-size: inherit;
+  }
+  .ft__bottom button {
+    text-decoration: underline;
+  }
+  @media (min-width: 1024px) {
+    .ft__grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .ft__col summary {
+      pointer-events: none;
+      border: 0;
+      padding-block: 0 8px;
+    }
+    .ft__col summary :global(.icon) {
+      display: none;
+    }
+    .ft__title {
+      border: 0;
+      padding-block: 0 8px;
+    }
+  }
+</style>

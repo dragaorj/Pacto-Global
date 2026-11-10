@@ -1,0 +1,293 @@
+---
+/**
+ * Seções de coleções do CMS: Eventos · Movimentos · Plataformas · Notícias · Publicações
+ * Use: <Collections kind="eventos" ... />
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import SectionShell from './SectionShell.astro';
+import EventCard from '../cards/EventCard.astro';
+import NewsCard from '../cards/NewsCard.astro';
+import PublicationCard, { type Tema } from '../cards/PublicationCard.astro';
+import PlatformCard, { type Plataforma } from '../cards/PlatformCard.astro';
+import Badge from '../ui/Badge.astro';
+import { type Lang, useT } from '../../i18n/ui';
+
+type Item = {
+  title: string;
+  href: string;
+  image?: ImageMetadata;
+  date?: string;
+  location?: string;
+  theme?: string;
+  excerpt?: string;
+  tag?: string;
+  color?: string;
+  ods?: number[];
+  language?: string;
+  featured?: boolean;
+};
+interface Props {
+  lang: Lang;
+  kind: 'eventos' | 'movimentos' | 'plataformas' | 'noticias' | 'publicacoes';
+  items: Item[];
+}
+const { lang, kind, items } = Astro.props;
+const t = useT(lang);
+const head = {
+  eventos: { id: 'eventos', label: t('events.label'), t1: t('events.t1'), t2: t('events.t2'), cta: t('events.cta'), bg: 'subtle', tone: 'light' },
+  movimentos: { id: 'movimentos', label: t('mov.label'), t1: t('mov.t1'), t2: t('mov.t2'), cta: t('mov.cta'), bg: 'navy', tone: 'dark' },
+  plataformas: { id: 'plataformas', label: t('plat.label'), t1: t('plat.t1'), t2: t('plat.t2'), cta: t('plat.cta'), bg: 'default', tone: 'light' },
+  noticias: { id: 'noticias', label: t('news.label'), t1: t('news.t1'), t2: t('news.t2'), cta: t('news.cta'), bg: 'subtle', tone: 'light' },
+  publicacoes: { id: 'publicacoes', label: t('pub.label'), t1: t('pub.t1'), t2: t('pub.t2'), cta: t('pub.cta'), bg: 'default', tone: 'light' },
+}[kind] as { id: string; label: string; t1: string; t2: string; cta: string; bg: 'default' | 'subtle' | 'navy'; tone: 'light' | 'dark' };
+const featured = kind === 'noticias' ? (items.find((i) => i.featured) ?? items[0]) : undefined;
+const rest = kind === 'noticias' ? items.filter((i) => i !== featured).slice(0, 2) : items;
+---
+
+<SectionShell id={head.id} label={head.label} t1={head.t1} t2={head.t2} bg={head.bg} tone={head.tone} actionLabel={head.cta} actionHref="#">
+  {
+    kind === 'eventos' && (
+      <ul role="list" class="row row--4 row--scroll" data-stagger>
+        {rest.map((i) => (
+          <li>
+            <EventCard title={i.title} href={i.href} date={i.date ?? ''} location={i.location ?? ''} theme={i.theme} status={t('events.open')} image={i.image} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    kind === 'movimentos' && (
+      <ul role="list" class="row row--5 mov" data-stagger>
+        {rest.map((i) => (
+          <li>
+            <a class="mov__tile" href={i.href} aria-label={i.title}>
+              {i.image ? <Picture src={i.image} alt={i.title} formats={['avif', 'webp']} widths={[200, 400]} sizes="200px" quality={80} loading="lazy" /> : <span>{i.title}</span>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    kind === 'plataformas' && (
+      <ul role="list" class="row row--3 plat" data-stagger>
+        {rest.map((i) => (
+          <li>
+            <PlatformCard platform={(i.color ?? 'clima') as Plataforma} title={i.title} description={i.excerpt ?? ''} ods={i.ods} href={i.href} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    kind === 'noticias' && featured && (
+      <div class="news" data-stagger>
+        <a class="news__feat" href={featured.href}>
+          {featured.image && <Picture src={featured.image} alt="" formats={['avif', 'webp']} widths={[480, 720, 960, 1200]} sizes="(min-width: 1024px) 588px, 100vw" quality={58} loading="lazy" />}
+          <span class="news__feat-txt">
+            {featured.tag && <Badge variant="pill" color="var(--tema-direitos-humanos)">{featured.tag}</Badge>}
+            <strong>{featured.title}</strong>
+            <small>{featured.date}</small>
+          </span>
+        </a>
+        {rest.map((i) => (
+          <NewsCard title={i.title} excerpt={i.excerpt} tag={i.tag} href={i.href} image={i.image} />
+        ))}
+      </div>
+    )
+  }
+
+  {
+    kind === 'publicacoes' && (
+      <ul role="list" class="row row--4 pubs" data-stagger>
+        {rest.map((i) => (
+          <li>
+            <PublicationCard title={i.title} theme={i.theme as Tema} language={i.language} href={i.href} image={i.image} linkLabel={t('pub.doc')} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</SectionShell>
+
+<style>
+  .row {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+  }
+  .row > li {
+    display: grid;
+  }
+  .row--scroll {
+    grid-auto-flow: column;
+    grid-auto-columns: min(290px, 78vw);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+  }
+  .row--scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .row--scroll > li {
+    scroll-snap-align: start;
+  }
+  .row--5 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .row--3 {
+    grid-template-columns: 1fr;
+  }
+  .plat > li:nth-child(n + 4) {
+    display: none;
+  }
+  .pubs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 768px) {
+    .row {
+      gap: 24px;
+    }
+    .row--scroll {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(2, 1fr);
+      overflow: visible;
+      margin-inline: 0;
+      padding-inline: 0;
+    }
+    .row--3 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .plat > li:nth-child(n + 4) {
+      display: grid;
+    }
+  }
+  @media (min-width: 1024px) {
+    .row--4,
+    .row--scroll,
+    .pubs {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .row--5 {
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+    }
+    .row--3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* movimentos */
+  .mov__tile {
+    display: grid;
+    place-items: center;
+    height: 88px;
+    padding: 16px 20px;
+    border-radius: var(--radius-2xl);
+    background: var(--white);
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .mov__tile:hover {
+    transform: var(--lift-sm);
+  }
+  .mov__tile :global(img) {
+    max-height: 56px;
+    width: auto;
+    object-fit: contain;
+  }
+  @media (min-width: 1024px) {
+    .mov__tile {
+      height: 112px;
+    }
+    .mov__tile :global(img) {
+      max-height: 64px;
+    }
+  }
+
+  /* notícias */
+  .news {
+    display: grid;
+    gap: 16px;
+  }
+  .news > :global(.news-card:nth-child(n + 3)) {
+    display: none;
+  }
+  .news__feat {
+    position: relative;
+    display: grid;
+    align-items: end;
+    min-height: 420px;
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    color: var(--white);
+    text-decoration: none;
+    isolation: isolate;
+  }
+  .news__feat :global(picture),
+  .news__feat :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    transition: transform 600ms var(--ease-out);
+  }
+  .news__feat:hover :global(img) {
+    transform: scale(1.03);
+  }
+  .news__feat::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(10 15 30 / 0) 30%, rgb(10 15 30 / 0.95) 100%);
+  }
+  .news__feat-txt {
+    display: grid;
+    gap: 12px;
+    justify-items: start;
+    padding: 24px;
+  }
+  .news__feat-txt strong {
+    font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    font-weight: var(--weight-semibold);
+    line-height: 1.25;
+  }
+  .news__feat-txt small {
+    color: var(--navy-200);
+    font-size: var(--text-sm);
+  }
+  @media (min-width: 768px) {
+    .news {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .news__feat {
+      grid-column: 1 / -1;
+    }
+    .news > :global(.news-card:nth-child(n + 3)) {
+      display: flex;
+    }
+  }
+  @media (min-width: 1024px) {
+    .news {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+    .news__feat {
+      grid-column: auto;
+      min-height: 520px;
+    }
+    .news__feat-txt {
+      padding: 36px;
+    }
+  }
+</style>
